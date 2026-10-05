@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+
+<!-- Mirrored from https://teacheraihayel.netlify.app/aicorrector.html by HTTrack Website Copier/3.x [XR&CO], Sun, 04 Oct 2026 16:15:26 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="UTF-8">
+<!-- This site is hosted on Netlify. Anyone can build and deploy a site
+     like this one for free: https://netlify.new/?utm_campaign=loops&utm_source=ai-legible&utm_medium=owned&utm_content=comment&utm_id=44cc1212-9d5f-474b-941a-73b7d8d02c3e
+     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>المصحح الذكي - الهائل</title>
+    
+    <script src="cordova.html"></script>
+    <script src="localforage.min.js"></script>
+
+    <style>
+        /* 🎨 الخطوط والألوان الأساسية */
+        @font-face { font-family: 'Cairo'; src: url('fonts/Cairo-ExtraBold.woff') format('woff'); }
+        @font-face { font-family: 'AlMohanad'; src: url('fonts/AlMohanad.ttf') format('truetype'); }
+
+        body { font-family: 'Cairo', 'Arial', sans-serif; background-color: #f1f5f9; margin: 0; padding: 0; padding-top: 60px; color: #1e293b; }
+        * { box-sizing: border-box; }
+
+        /* 🏷️ الشريط العلوي */
+        .top-navbar { position: fixed; top: 0; left: 0; width: 100%; height: 60px; background: linear-gradient(135deg, #0f172a, #1e293b); color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .nav-brand { font-size: 18px; font-weight: 900; color: #38bdf8; display: flex; align-items: center; gap: 8px; }
+        .btn-back { background: #ef4444; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-family: inherit; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 5px; text-decoration: none; }
+
+        /* 📦 الحاويات الرئيسية */
+        .container { max-width: 900px; margin: 20px auto; padding: 0 15px; display: flex; flex-direction: column; gap: 20px; }
+        .panel { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 4px solid #0284c7; }
+
+        /* ⚙️ لوحة الإعدادات */
+        .panel-header { font-size: 18px; font-weight: 900; color: #0284c7; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; border-bottom: 2px dashed #e2e8f0; padding-bottom: 10px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        .input-group label { display: block; font-size: 14px; font-weight: bold; color: #475569; margin-bottom: 5px; }
+        .input-group input, .input-group textarea { width: 100%; padding: 10px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-family: inherit; font-size: 14px; outline: none; transition: 0.2s; }
+        .input-group input:focus, .input-group textarea:focus { border-color: #0ea5e9; box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1); }
+        
+        /* 📸 أزرار الإدخال */
+        .action-buttons { display: flex; gap: 10px; justify-content: center; margin-top: 5px; }
+        .btn-action { flex: 1; padding: 12px; border: none; border-radius: 8px; font-size: 15px; font-weight: 900; color: white; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 5px; font-family: inherit; }
+        .btn-action:active { transform: scale(0.97); }
+        .btn-camera { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2); }
+        .btn-gallery { background: linear-gradient(135deg, #8b5cf6, #6d28d9); box-shadow: 0 4px 10px rgba(139, 92, 246, 0.2); }
+        .btn-danger { background: #ef4444; color: white; }
+
+        /* ⏳ شريط التقدم */
+        .progress-container { margin-top: 15px; display: none; }
+        .progress-text { font-size: 14px; font-weight: bold; color: #f59e0b; margin-bottom: 5px; text-align: center; }
+        .progress-bar { width: 100%; height: 12px; background: #e2e8f0; border-radius: 10px; overflow: hidden; }
+        .progress-fill { height: 100%; width: 0%; background: #f59e0b; transition: width 0.3s ease; }
+
+        /* 📊 جدول النتائج */
+        .results-table-wrapper { overflow-x: auto; margin-top: 15px; border-radius: 8px; border: 1px solid #e2e8f0; }
+        table { width: 100%; border-collapse: collapse; text-align: center; font-size: 14px; }
+        th { background: #f8fafc; padding: 12px; color: #0f172a; border-bottom: 2px solid #cbd5e1; white-space: nowrap; }
+        td { padding: 12px; border-bottom: 1px solid #e2e8f0; color: #334155; font-weight: bold; }
+        tr:hover { background: #f1f5f9; }
+        .score-badge { background: #dcfce7; color: #166534; padding: 4px 10px; border-radius: 6px; font-weight: 900; }
+        
+        .btn-export { width: 100%; background: #1d4ed8; color: white; padding: 15px; border: none; border-radius: 10px; font-size: 16px; font-weight: 900; cursor: pointer; display: none; margin-top: 15px; font-family: inherit; }
+        
+        /* 🔔 التنبيهات */
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #334155; color: white; padding: 12px 24px; border-radius: 30px; font-weight: bold; z-index: 5000; opacity: 0; visibility: hidden; transition: 0.3s; }
+        .toast.show { opacity: 1; visibility: visible; }
+    </style>
+</head>
+<body>
+
+    <!-- الشريط العلوي -->
+    <div class="top-navbar">
+        <div class="nav-brand">🤖 المصحح الذكي (AI Corrector)</div>
+        <a class='btn-back' href='index.html'>رجوع 🏠</a>
+    </div>
+
+    <div class="container">
+        <!-- ⚙️ لوحة الإعدادات وتصوير نموذج الإجابة -->
+        <div class="panel" style="border-top-color: #8b5cf6;">
+            <div class="panel-header">⚙️ إعدادات التصحيح والنموذج</div>
+            
+            <div class="grid-2">
+                <div class="input-group">
+                    <label>المادة (تظهر في الكشف):</label>
+                    <input type="text" id="subjectName" placeholder="مثال: لغة إنجليزية">
+                </div>
+                <div class="input-group">
+                    <label>الصف (يظهر في الكشف):</label>
+                    <input type="text" id="gradeName" placeholder="مثال: الثالث الثانوي">
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="input-group">
+                    <label>الدرجة الكلية لورقة الاختبار:</label>
+                    <input type="number" id="totalScore" value="20" placeholder="مثال: 20">
+                </div>
+                <div class="input-group">
+                    <label>الدرجة لكل سؤال (اختياري):</label>
+                    <input type="number" id="scorePerQ" placeholder="مثال: 2">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>نموذج الإجابة الصحيحة (من الاستوديو فقط):</label>
+                
+                <div class="action-buttons" style="margin-bottom: 10px;">
+                    <button type="button" class="btn-action btn-gallery" onclick="document.getElementById('answerKeyImageInput').click()">
+                        🖼️ اختيار نموذج الإجابة
+                    </button>
+                    <button type="button" id="btnClearKeyImg" class="btn-action btn-danger" style="display: none; flex: 0.4;" onclick="clearAnswerKeyImage()">
+                        🗑️ إزالة
+                    </button>
+                </div>
+                <!-- 💡 تمت إزالة capture="environment" لكي يفتح الاستوديو دائماً -->
+                <input type="file" id="answerKeyImageInput" accept="image/*" hidden onchange="handleAnswerKeyImage(event)">
+                
+                <!-- معاينة صورة النموذج -->
+                <div id="answerKeyImagePreviewContainer" style="display: none; margin-bottom: 10px; text-align: center; background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1;">
+                    <span style="display:block; font-size:12px; color:#10b981; font-weight:bold; margin-bottom:5px;">✅ تم حفظ صورة نموذج الإجابة بنجاح</span>
+                    <img id="answerKeyImagePreview" src="#" style="max-height: 120px; border-radius: 6px; border: 2px solid #10b981;">
+                </div>
+
+                <textarea id="answerKey" rows="2" placeholder="يمكنك كتابة ملاحظات إضافية للتصحيح هنا... (اختياري)"></textarea>
+            </div>
+        </div>
+
+        <!-- 📸 لوحة إدخال أوراق الطلاب -->
+        <div class="panel" style="border-top-color: #10b981;">
+            <div class="panel-header">📥 رفع أوراق الطلاب للتصحيح</div>
+            <p style="font-size: 13px; color: #64748b; font-weight: bold; margin-top: 0;">يجب أن تكون الصورة واضحة لضمان قراءة اسم الطالب وإجاباته بدقة.</p>
+            
+            <div class="action-buttons">
+                <!-- زر الكاميرا -->
+                <button class="btn-action btn-camera" onclick="document.getElementById('cameraInput').click()">
+                    📸 تصوير أوراق الطلاب
+                </button>
+                <input type="file" id="cameraInput" accept="image/*" capture="environment" hidden onchange="handleImageSelection(event)">
+
+                <!-- زر الاستوديو -->
+                <button class="btn-action btn-gallery" onclick="document.getElementById('galleryInput').click()">
+                    🖼️ من الاستوديو (متعدد)
+                </button>
+                <input type="file" id="galleryInput" accept="image/*" multiple hidden onchange="handleImageSelection(event)">
+            </div>
+
+            <!-- شريط التقدم -->
+            <div class="progress-container" id="progressContainer">
+                <div class="progress-text" id="progressText">جاري تجهيز الأوراق للتصحيح...</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 📊 لوحة الكشف والنتائج -->
+        <div class="panel" style="border-top-color: #f59e0b;">
+            <div class="panel-header">📊 كشف الدرجات المباشر</div>
+            
+            <div class="results-table-wrapper">
+                <table id="resultsTable">
+                    <thead>
+                        <tr>
+                            <th>م</th>
+                            <th>الاسم</th>
+                            <th>رقم الجلوس</th>
+                            <th>الدرجة</th>
+                            <th>صح</th>
+                            <th>خطأ</th>
+                            <th>أرقام الأخطاء</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultsBody">
+                        <tr><td colspan="7" style="color:#94a3b8; padding:20px;">لم يتم تصحيح أي ورقة بعد.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <button class="btn-export" id="btnExport" onclick="exportToExcel()">📥 تصدير الكشف إلى Excel 📊</button>
+        </div>
+    </div>
+
+    <!-- التنبيهات -->
+    <div class="toast" id="toastMsg">تمت العملية بنجاح!</div>
+
+    <!-- السكريبت المنطقي للمصحح -->
+    <script>
+        // المتغيرات الأساسية
+        let gradingQueue = [];
+        let isGrading = false;
+        let finalResults = []; 
+        let totalPapers = 0;
+        let processedPapers = 0;
+        
+        let answerKeyBase64 = null;
+
+        // 🌟 استرجاع نموذج الإجابة المحفوظ عند تحميل الصفحة 🌟
+        window.addEventListener('load', async () => {
+            try {
+                const savedKeyImg = await localforage.getItem('saved_answer_key_img');
+                
+                if (savedKeyImg) {
+                    answerKeyBase64 = savedKeyImg;
+                    const imgPreview = document.getElementById('answerKeyImagePreview');
+                    imgPreview.src = 'data:image/jpeg;base64,' + savedKeyImg;
+                    document.getElementById('answerKeyImagePreviewContainer').style.display = 'block';
+                    document.getElementById('btnClearKeyImg').style.display = 'flex';
+                }
+            } catch (e) { console.error("لم يتم العثور على نموذج محفوظ"); }
+        });
+
+        function showToast(msg, isError = false) {
+            const t = document.getElementById('toastMsg');
+            t.textContent = msg;
+            t.style.background = isError ? '#ef4444' : '#10b981';
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3500); 
+        }
+
+        // جلب المفتاح واسم النموذج من الإعدادات
+        function getApiConfig() {
+            let key = null;
+            let model = 'gemini-3.5-flash'; 
+            try {
+                const settings = JSON.parse(localStorage.getItem('haael_settings_v2'));
+                if (settings && settings.apiKey) key = settings.apiKey;
+                if (settings && settings.defaultModel) model = settings.defaultModel;
+            } catch (e) {}
+            return { key, model };
+        }
+
+        // ضغط الصور لتخفيف استهلاك الإنترنت بشكل آمن
+        async function compressImageForGrading(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const MAX_WIDTH = 1200; 
+                        let w = img.width, h = img.height;
+                        
+                        if (w > MAX_WIDTH) { h = Math.round(h * MAX_WIDTH / w); w = MAX_WIDTH; }
+                        
+                        canvas.width = w; canvas.height = h;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, w, h);
+                        
+                        const base64 = canvas.toDataURL('image/jpeg', 0.8).split(',')[1];
+                        resolve(base64);
+                    };
+                    img.onerror = reject;
+                    img.src = e.target.result;
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // 🌟 معالجة صورة نموذج الإجابة وحفظها في localforage 🌟
+        async function handleAnswerKeyImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            showToast('⏳ جاري قراءة الصورة وحفظها...');
+            
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const imgPreview = document.getElementById('answerKeyImagePreview');
+                imgPreview.src = e.target.result;
+                document.getElementById('answerKeyImagePreviewContainer').style.display = 'block';
+                document.getElementById('btnClearKeyImg').style.display = 'flex';
+                
+                try {
+                    answerKeyBase64 = await compressImageForGrading(file);
+                    await localforage.setItem('saved_answer_key_img', answerKeyBase64);
+                    showToast('✅ تم حفظ نموذج الإجابة بنجاح!');
+                } catch (err) {
+                    console.error("خطأ في حفظ النموذج:", err);
+                    showToast('⚠️ فشل حفظ الصورة', true);
+                }
+            };
+            reader.readAsDataURL(file);
+            event.target.value = ''; 
+        }
+
+        // مسح صورة نموذج الإجابة
+        function clearAnswerKeyImage() {
+            answerKeyBase64 = null;
+            localforage.removeItem('saved_answer_key_img'); 
+            document.getElementById('answerKeyImagePreviewContainer').style.display = 'none';
+            document.getElementById('btnClearKeyImg').style.display = 'none';
+            document.getElementById('answerKeyImageInput').value = '';
+            showToast('🗑️ تم مسح النموذج السابق');
+        }
+
+        // استقبال صور الطلاب للطابور
+        async function handleImageSelection(event) {
+            const files = event.target.files;
+            if (!files || files.length === 0) return;
+
+            const config = getApiConfig();
+            if (!config.key) {
+                alert('⚠️ يرجى إدخال مفتاح Gemini API في إعدادات التطبيق الرئيسية أولاً.');
+                return;
+            }
+
+            for (let i = 0; i < files.length; i++) {
+                gradingQueue.push(files[i]);
+            }
+            
+            totalPapers += files.length;
+            event.target.value = ''; 
+            
+            document.getElementById('progressContainer').style.display = 'block';
+            updateProgressUI();
+            
+            if (!isGrading) {
+                processQueue();
+            }
+        }
+
+        function updateProgressUI() {
+            const text = document.getElementById('progressText');
+            const fill = document.getElementById('progressFill');
+            
+            if (processedPapers === totalPapers && totalPapers > 0) {
+                text.textContent = `✅ اكتمل تصحيح ${totalPapers} أوراق!`;
+                text.style.color = '#10b981';
+                fill.style.width = '100%';
+                fill.style.background = '#10b981';
+                document.getElementById('btnExport').style.display = 'block';
+            } else {
+                text.textContent = `⏳ جاري تصحيح الورقة ${processedPapers + 1} من ${totalPapers}...`;
+                text.style.color = '#f59e0b';
+                fill.style.background = '#f59e0b';
+                fill.style.width = Math.round((processedPapers / totalPapers) * 100) + '%';
+            }
+        }
+
+        // 🌟 المحرك الأساسي (المطابقة البصرية للصورة مع الصورة) 🌟
+        async function processQueue() {
+            isGrading = true;
+            const config = getApiConfig();
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${config.model}:generateContent?key=${config.key}`;
+            
+            const tbody = document.getElementById('resultsBody');
+            if (processedPapers === 0) tbody.innerHTML = ''; 
+
+            const ansKeyText = document.getElementById('answerKey').value.trim();
+            const totalScore = document.getElementById('totalScore').value || 20;
+            const qScore = document.getElementById('scorePerQ').value;
+
+            // 💡 التوجيه المحدث لقراءة علامات الطالب المختلفة بدقة 
+            let promptText = `أنت مصحح امتحانات إلكتروني فائق الدقة. المرفق هو صور تخص اختبار طالب يمني.
+الدرجة الكلية للاختبار: ${totalScore}.
+${qScore ? `درجة كل سؤال هي: ${qScore}.` : 'قم بتوزيع الدرجة بالتساوي على عدد الأسئلة.'}
+
+⚠️ تعليمات حاسمة لقراءة إجابات الطالب (مرونة بصرية):
+1. في أسئلة (الصح والخطأ): الطالب قد يضع علامة (✓) أو (✗)، أو يكتب كلمة (صح) أو (خطأ) بالعربية. اقبل أي إشارة تدل على اختياره بوضوح.
+2. في أسئلة (الاختيار من متعدد): الطالب قد يضع (دائرة) حول الخيار، أو (خطاً) تحته، أو علامة (✓) بجانبه، أو يكتب رقم/حرف الخيار في الفراغ. ابحث عن أي تمييز بصري للخيار الصحيح.
+3. في الأسئلة (المقالية والفراغات): طابق "المضمون والمعنى العلمي" مع نموذج الإجابة، ولا تشترط التطابق الحرفي للكلمات.
+`;
+
+            let attempts = 0;
+            let maxAttempts = 3;
+
+            while (gradingQueue.length > 0) {
+                const file = gradingQueue[0]; 
+                updateProgressUI();
+
+                try {
+                    const studentImageBase64 = await compressImageForGrading(file);
+                    const requestParts = [];
+
+                    // إرسال صورة النموذج دائماً للمطابقة البصرية
+                    if (answerKeyBase64) {
+                        requestParts.push({ text: "الصورة الأولى المرفقة هي [صورة نموذج الإجابة الصحيحة]. طابق بصرياً بين إجابات الطالب وهذه الصورة واعتمدها كمرجع صارم للتصحيح." });
+                        requestParts.push({ inlineData: { mimeType: 'image/jpeg', data: answerKeyBase64 } });
+                    }
+
+                    // إرسال صورة ورقة الطالب
+                    requestParts.push({ text: "الصورة التالية هي [ورقة إجابة الطالب] المراد تصحيحها:" });
+                    requestParts.push({ inlineData: { mimeType: 'image/jpeg', data: studentImageBase64 } });
+
+                    let taskPrompt = promptText;
+                    if (ansKeyText) {
+                        taskPrompt += `\nملاحظات إضافية لنموذج الإجابة وضعها المعلم: "${ansKeyText}".`;
+                    }
+                    if (!answerKeyBase64 && !ansKeyText) {
+                        taskPrompt += `\n(لا يوجد نموذج إجابة مرفق. قم بحل الأسئلة المكتوبة في الورقة علمياً أولاً، ثم طابق إجابة الطالب بحلك الدقيق).`;
+                    }
+
+                    taskPrompt += `\n
+مهمتك:
+1. استخرج اسم الطالب ورقم الجلوس من ورقة إجابة الطالب (حتى لو كان الخط متداخلاً).
+2. صحح إجابات الطالب وقارنها بنموذج الإجابة بدقة متناهية.
+3. استخرج النتائج بتنسيق JSON فقط بدون أي نصوص إضافية أو علامات Markdown.
+
+هيكل الـ JSON المطلوب (يجب الالتزام به حرفياً):
+{
+  "studentName": "اسم الطالب أو 'غير مكتوب'",
+  "seatNumber": "رقم الجلوس أو 'غير مكتوب'",
+  "correctCount": 5,
+  "wrongCount": 2,
+  "wrongQuestions": "س2، س4",
+  "finalScore": 18.5
+}`;
+                    requestParts.push({ text: taskPrompt });
+
+                    const requestBody = {
+                        contents: [{ role: 'user', parts: requestParts }],
+                        generationConfig: { temperature: 0.1 } 
+                    };
+
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(requestBody)
+                    });
+
+                    const data = await response.json();
+                    
+                    if (!response.ok) {
+                        throw new Error(data.error?.message || 'خطأ في الاتصال بالسيرفر');
+                    }
+
+                    const rawText = data.candidates[0].content.parts[0].text;
+                    const resultJson = JSON.parse(rawText.replace(/```json/gi, '').replace(/```/g, '').trim());
+
+                    finalResults.push(resultJson);
+                    processedPapers++;
+                    gradingQueue.shift(); 
+                    attempts = 0; 
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${processedPapers}</td>
+                        <td>${resultJson.studentName || 'غير مكتوب'}</td>
+                        <td>${resultJson.seatNumber || '—'}</td>
+                        <td><span class="score-badge">${resultJson.finalScore} / ${totalScore}</span></td>
+                        <td style="color:#10b981;">${resultJson.correctCount}</td>
+                        <td style="color:#ef4444;">${resultJson.wrongCount}</td>
+                        <td style="font-size:12px; color:#64748b;">${resultJson.wrongQuestions || 'لا يوجد'}</td>
+                    `;
+                    tbody.appendChild(tr);
+
+                    // تأخير زمني طبيعي لتقليل فرصة التعرض للحظر (4.5 ثانية)
+                    if (gradingQueue.length > 0) {
+                        await new Promise(r => setTimeout(r, 4500));
+                    }
+
+                } catch (error) {
+                    attempts++;
+                    if (attempts < maxAttempts) {
+                        console.warn(`محاولة ${attempts} فشلت:`, error.message);
+                        showToast(`⚠️ خطأ بالاتصال. جاري إعادة المحاولة (${attempts}/${maxAttempts})...`, true);
+                        await new Promise(r => setTimeout(r, 3500)); // تأخير بسيط جداً ثم المحاولة
+                        continue; 
+                    } else {
+                        console.error("فشل نهائي للورقة:", error.message);
+                        showToast('❌ فشل تصحيح الورقة نهائياً. جاري تخطيها.', true);
+                        gradingQueue.shift(); 
+                        processedPapers++;
+                        attempts = 0;
+                        
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `<td colspan="7" style="color:#ef4444; background: #fee2e2;">❌ فشل تصحيح ورقة (صورة غير واضحة أو السيرفر مشغول)</td>`;
+                        tbody.appendChild(tr);
+                    }
+                }
+            }
+
+            isGrading = false;
+            updateProgressUI();
+            if (processedPapers > 0) {
+                showToast('🎉 اكتملت عملية التصحيح!');
+            }
+        }
+
+        // التصدير إلى إكسل 
+        function exportToExcel() {
+            if (finalResults.length === 0) {
+                alert('لا توجد بيانات لتصديرها.');
+                return;
+            }
+
+            const subject = document.getElementById('subjectName').value.trim() || '—';
+            const grade = document.getElementById('gradeName').value.trim() || '—';
+
+            let csvContent = "\uFEFF"; 
+            csvContent += "م,الاسم,رقم الجلوس,الصف,المادة,الدرجة النهائية,الأسئلة الصحيحة,الأسئلة الخاطئة,أرقام الأخطاء\n";
+
+            finalResults.forEach((res, index) => {
+                const wrongQ = `"${res.wrongQuestions || ''}"`;
+                csvContent += `${index + 1},${res.studentName},${res.seatNumber},${grade},${subject},${res.finalScore},${res.correctCount},${res.wrongCount},${wrongQ}\n`;
+            });
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            
+            const dateStr = new Date().toLocaleDateString('ar-EG').replace(/\//g, '-');
+            link.setAttribute("href", url);
+            const fileName = subject !== '—' ? `كشف_درجات_${subject.replace(/ /g, '_')}_${dateStr}.csv` : `كشف_التصحيح_الآلي_${dateStr}.csv`;
+            link.setAttribute("download", fileName);
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showToast('✅ تم تنزيل كشف الإكسل بنجاح!');
+        }
+    </script>
+</body>
+
+<!-- Mirrored from https://teacheraihayel.netlify.app/aicorrector.html by HTTrack Website Copier/3.x [XR&CO], Sun, 04 Oct 2026 16:15:26 GMT -->
+</html>
