@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<!-- Mirrored from https://teacheraihayel.netlify.app/schedule.html by HTTrack Website Copier/3.x [XR&CO], Sun, 04 Oct 2026 16:15:10 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8">
+<!-- This site is hosted on Netlify. Anyone can build and deploy a site
+     like this one for free: https://netlify.new/?utm_campaign=loops&utm_source=ai-legible&utm_medium=owned&utm_content=comment&utm_id=44cc1212-9d5f-474b-941a-73b7d8d02c3e
+     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#7C3AED">
+<title>الهائل - جدول الحصص</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  body { background-color: #f4f2fb; font-family: 'Cairo', 'Tajawal', sans-serif; margin: 0; padding: 0; }
+  .schedule-wrapper { padding: 80px 15px 30px; max-width: 1200px; margin: 0 auto; overflow-x: auto; }
+  
+  /* ─── لوحة الإحصائيات والتلميحات ─── */
+  .top-banner { background: #fef3c7; border-right: 4px solid #f59e0b; padding: 12px 16px; margin-bottom: 20px; border-radius: 8px; font-weight: 800; color: #92400e; font-size: 14px; display: flex; align-items: center; gap: 10px; animation: pulse-banner 2s infinite; }
+  @keyframes pulse-banner { 0% { opacity: 1; } 50% { opacity: 0.8; } 100% { opacity: 1; } }
+  
+  .stats-board { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
+  .stat-card { background: white; padding: 15px; border-radius: 12px; flex: 1; min-width: 120px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1.5px solid #e2e8f0; }
+  .stat-title { font-size: 13px; color: #64748b; font-weight: bold; }
+  .stat-val { font-size: 26px; font-weight: 900; margin-top: 5px; }
+  .val-total { color: #4c1d95; } .val-done { color: #16a34a; } .val-remain { color: #dc2626; }
+
+  /* ─── الجدول والحصص ─── */
+  .schedule-table { width: 100%; border-collapse: separate; border-spacing: 6px; min-width: 800px; }
+  .schedule-table th { background: linear-gradient(135deg, #7C3AED, #5B21B6); color: white; padding: 12px; border-radius: 10px; font-size: 15px; font-weight: 900; text-align: center; box-shadow: 0 4px 10px rgba(124, 58, 237, 0.2); }
+  .day-cell { background: #ffffff; color: #4c1d95; font-weight: 900; font-size: 16px; text-align: center; padding: 15px; border-radius: 10px; border-right: 5px solid #7C3AED; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+  
+  .slot-cell { background: #ffffff; border-radius: 10px; padding: 8px; height: 95px; vertical-align: middle; text-align: center; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border: 1.5px solid transparent; position: relative; }
+  .slot-cell:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(124, 58, 237, 0.15); border-color: #a78bfa; }
+  .slot-empty { border: 1.5px dashed #cbd5e1; background: #f8fafc; color: #94a3b8; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; border-radius: 6px;}
+  .slot-empty span { font-size: 24px; font-weight: 300; margin-bottom: -5px; }
+  
+  .slot-filled { background: #f0fdf4; border: 1.5px solid #86efac; border-right: 4px solid #10b981; display: flex; flex-direction: column; justify-content: space-between; height: 100%; text-align: right; padding: 6px 8px; border-radius: 6px;}
+  .slot-subject { font-weight: 900; color: #065f46; font-size: 13.5px; margin-bottom: 2px; }
+  .slot-grade { font-size: 11px; color: #047857; font-weight: bold; margin-bottom: 2px;}
+  .slot-book { font-size: 10px; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  
+  /* ─── زر التحضير (أحمر نابض / أخضر) ─── */
+  .prep-action-btn { display: block; width: 100%; margin-top: 6px; padding: 6px; border-radius: 6px; font-size: 11px; font-weight: 900; text-align: center; cursor: pointer; color: white; border: none; font-family: inherit; transition: 0.3s; }
+  .prep-red { background: #dc2626; box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); animation: pulse-red 1.5s infinite; }
+  .prep-green { background: #16a34a; }
+  .prep-none { background: #94a3b8; cursor: default; }
+  
+  @keyframes pulse-red { 
+    0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); } 
+    70% { box-shadow: 0 0 0 6px rgba(220, 38, 38, 0); } 
+    100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); } 
+  }
+
+  /* ─── النوافذ المنبثقة (Modals) ─── */
+  .modal-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.8); z-index: 9999; display: none; align-items: center; justify-content: center; }
+  .modal-bg.is-active { display: flex; }
+  .modal-card { background: #fff; width: 90%; max-width: 400px; border-radius: 16px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+  .modal-hdr { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 15px; }
+  .modal-hdr h2 { margin: 0; font-size: 18px; color: #1e293b; }
+  .modal-close { background: none; border: none; font-size: 20px; cursor: pointer; color: #64748b; }
+  .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 15px; }
+  .field span { font-size: 13px; font-weight: bold; color: #475569; }
+  .field input, .field select { padding: 10px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-family: inherit; font-size: 14px; outline: none; }
+  .field input:focus, .field select:focus { border-color: #7C3AED; }
+  .btn-row { display: flex; gap: 10px; margin-top: 20px; }
+  .btn-save { flex: 2; background: #10b981; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-family: inherit;}
+  .btn-delete { flex: 1; background: #fee2e2; color: #dc2626; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-family: inherit;}
+
+  .toc-item-btn { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; cursor: pointer; text-align: right; font-family: inherit; font-size: 14px; transition: 0.2s; color: #1e293b; font-weight: bold; width: 100%; margin-bottom: 8px;}
+  .toc-item-btn:hover { background: #eef2ff; border-color: #8b5cf6; color: #4c1d95; transform: translateX(-3px); }
+  .toc-pages-badge { background: #e2e8f0; color: #475569; padding: 4px 8px; border-radius: 20px; font-size: 11px; white-space: nowrap; margin-right: 10px;}
+  .toc-item-btn:hover .toc-pages-badge { background: #c4b5fd; color: #4c1d95; }
+</style>
+</head>
+<body>
+
+<header class="appbar">
+  <div class="appbar-row">
+    <button class="appbar-btn" style="display:flex; align-items:center; gap:5px; background:none; border:none; color:white; font-family:inherit; cursor:pointer;" onclick="window.location.href='index-2.html'">
+      <svg viewBox="0 0 24 24" width="20" height="20"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>الرئيسية</span>
+    </button>
+    <span class="appbar-title">جدول الحصص والتحضير الآلي</span>
+    <button class="appbar-btn" style="background:none; border:none; color:white; font-family:inherit; cursor:pointer; font-size:12px; font-weight:bold;" onclick="resetAllPreps()">🔄 أسبوع جديد</button>
+  </div>
+</header>
+
+<div class="schedule-wrapper">
+  
+  <div class="top-banner">
+    💡 تلميح: أدخل جدول حصصك واربط كل حصة بالكتاب من المكتبة لكي تُحضر الحصة آلياً.
+  </div>
+
+  <div class="stats-board">
+    <div class="stat-card">
+      <div class="stat-title">إجمالي الحصص</div>
+      <div class="stat-val val-total" id="statTotal">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-title">تم تحضيرها</div>
+      <div class="stat-val val-done" id="statDone">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-title">بانتظار التحضير</div>
+      <div class="stat-val val-remain" id="statRemain">0</div>
+    </div>
+  </div>
+
+  <div class="card" style="padding: 10px; background: transparent; box-shadow: none;">
+    <table class="schedule-table">
+      <thead>
+        <tr>
+          <th style="background: #ffffff; color: #7C3AED; box-shadow: none;">اليوم / الحصة</th>
+          <th>1️⃣ الأولى</th><th>2️⃣ الثانية</th><th>3️⃣ الثالثة</th><th>4️⃣ الرابعة</th><th>5️⃣ الخامسة</th><th>6️⃣ السادسة</th><th>7️⃣ السابعة</th>
+        </tr>
+      </thead>
+      <tbody id="scheduleBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- نافذة تنبيه ما بعد الثانية مساءً -->
+<div class="modal-bg" id="notificationModal">
+  <div class="modal-card" style="text-align: center; padding: 30px 20px;">
+    <div style="font-size: 50px; margin-bottom: 10px;">⏰</div>
+    <h2 style="color: #dc2626; margin-bottom: 10px; font-size: 20px; font-weight: 900;">تذكير حصص الغد!</h2>
+    <p id="notifyMsg" style="color: #475569; font-size: 15px; font-weight: bold; line-height: 1.6; margin-bottom: 25px;"></p>
+    <button class="btn-save" style="width: 100%;" onclick="document.getElementById('notificationModal').classList.remove('is-active')">حسناً، سأبدأ التحضير</button>
+  </div>
+</div>
+
+<div class="modal-bg" id="slotModal">
+  <div class="modal-card">
+    <div class="modal-hdr">
+      <h2 id="modalTitle">إعداد الحصة</h2>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="slotId">
+      <label class="field"><span>المادة الدراسية</span><input type="text" id="inpSubject" placeholder="مثال: لغة إنجليزية"></label>
+      <label class="field"><span>الصف والشعبة</span><input type="text" id="inpGrade" placeholder="مثال: ثالث ثانوي (أ)"></label>
+      <label class="field">
+        <span>ربط بكتاب من المكتبة (للتحضير الآلي)</span>
+        <select id="inpBook"><option value="">-- بدون ربط --</option></select>
+      </label>
+      <div class="btn-row">
+        <button class="btn-save" onclick="saveSlot()">💾 حفظ الحصة</button>
+        <button class="btn-delete" id="btnDeleteSlot" onclick="deleteSlot()">🗑️ حذف</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- نافذة اختيار الفهرس أو الصفحات للتحضير -->
+<div class="modal-bg" id="prepModal">
+  <div class="modal-card" style="max-width: 500px;">
+    <div class="modal-hdr">
+      <h2 id="prepModalTitle">تحضير الدرس</h2>
+      <button class="modal-close" onclick="closePrepModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="prepTocContainer" style="display: none;">
+        <p style="font-size: 13px; color: #475569; margin-bottom: 15px; font-weight: bold;">الكتاب يحتوي على فهرس، اختر الدرس للبدء:</p>
+        <div id="prepTocList" style="max-height: 350px; overflow-y: auto; display: flex; flex-direction: column; padding-left: 5px;">
+        </div>
+      </div>
+      
+      <div id="prepManualContainer" style="display: none; padding-top: 5px;">
+        <p style="font-size: 13px; color: #475569; margin-bottom: 15px; font-weight: bold;">حدد أرقام الصفحات يدوياً (هذا الكتاب لا يحتوي على فهرس):</p>
+        <div style="display: flex; gap: 15px;">
+          <label class="field" style="flex: 1;">
+            <span>من صفحة:</span>
+            <input type="number" id="prepFromPage" min="1" value="1">
+          </label>
+          <label class="field" style="flex: 1;">
+            <span>إلى صفحة:</span>
+            <input type="number" id="prepToPage" min="1" value="3">
+          </label>
+        </div>
+        <button class="btn-save" style="width: 100%; margin-top: 15px;" onclick="confirmManualPrep()">🚀 استخراج وبدء التحضير</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const DAYS = ['السبت', 'الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس'];
+  const PERIODS = 7;
+  let scheduleData = JSON.parse(localStorage.getItem('hael_schedule_data') || '{}');
+  let libraryBooks = [];
+
+  function loadLibraryBooks() {
+    return new Promise((resolve) => {
+      const req = indexedDB.open('haaelDB_v2.html', 2);
+      req.onsuccess = (e) => {
+        const db = e.target.result;
+        if (!db.objectStoreNames.contains('books')) { resolve(); return; }
+        const tx = db.transaction('books', 'readonly');
+        const store = tx.objectStore('books');
+        const getAll = store.getAll();
+        getAll.onsuccess = () => {
+          libraryBooks = getAll.result;
+          const select = document.getElementById('inpBook');
+          libraryBooks.forEach(b => {
+            const opt = document.createElement('option');
+            opt.value = b.id; opt.textContent = b.name;
+            select.appendChild(opt);
+          });
+          resolve();
+        };
+      };
+      req.onerror = () => resolve();
+    });
+  }
+
+  function updateStats() {
+    let total = 0, done = 0, remain = 0;
+    for (let key in scheduleData) {
+        total++;
+        if (scheduleData[key].bookId) {
+            if (scheduleData[key].isPrepared) done++;
+            else remain++;
+        }
+    }
+    document.getElementById('statTotal').textContent = total;
+    document.getElementById('statDone').textContent = done;
+    document.getElementById('statRemain').textContent = remain;
+  }
+
+  function renderSchedule() {
+    const tbody = document.getElementById('scheduleBody');
+    tbody.innerHTML = '';
+    DAYS.forEach((dayName, dayIndex) => {
+      let tr = document.createElement('tr');
+      let tdDay = document.createElement('td');
+      tdDay.className = 'day-cell'; tdDay.textContent = dayName; tr.appendChild(tdDay);
+
+      for (let p = 1; p <= PERIODS; p++) {
+        let slotId = `${dayIndex}-${p}`;
+        let slotData = scheduleData[slotId];
+        let tdSlot = document.createElement('td');
+        tdSlot.className = 'slot-cell';
+        
+        if (slotData) {
+          let btnHtml = '';
+          if (slotData.bookId) {
+              if (slotData.isPrepared) {
+                  btnHtml = `<button class="prep-action-btn prep-green" onclick="event.stopPropagation(); togglePrepStatus('${slotId}')">✅ تم التحضير</button>`;
+              } else {
+                  btnHtml = `<button class="prep-action-btn prep-red" onclick="event.stopPropagation(); startAutoPrep('${slotId}')">🪄 انقر لتحضير الحصة</button>`;
+              }
+          } else {
+              btnHtml = `<button class="prep-action-btn prep-none" onclick="event.stopPropagation(); openModal('${slotId}', '${dayName}', ${p})">⚠️ اربطها بكتاب</button>`;
+          }
+
+          tdSlot.innerHTML = `
+            <div class="slot-filled" onclick="openModal('${slotId}', '${dayName}', ${p})">
+              <div>
+                <div class="slot-subject">${slotData.subject}</div>
+                <div class="slot-grade">${slotData.grade}</div>
+                ${slotData.bookName ? `<div class="slot-book">📘 ${slotData.bookName}</div>` : ''}
+              </div>
+              ${btnHtml}
+            </div>
+          `;
+        } else {
+          tdSlot.onclick = () => openModal(slotId, dayName, p);
+          tdSlot.innerHTML = `<div class="slot-empty"><span>+</span><small>إضافة</small></div>`;
+        }
+        tr.appendChild(tdSlot);
+      }
+      tbody.appendChild(tr);
+    });
+    updateStats();
+  }
+
+  function togglePrepStatus(slotId) {
+      if(confirm('هل تريد التراجع عن تحضير هذه الحصة لتظهر باللون الأحمر مجدداً؟')) {
+          scheduleData[slotId].isPrepared = false;
+          localStorage.setItem('hael_schedule_data', JSON.stringify(scheduleData));
+          renderSchedule();
+      }
+  }
+
+  function resetAllPreps() {
+      if(confirm('هل أنت متأكد من تصفير جميع الحصص لبدء أسبوع دراسي جديد؟ (ستعود جميع الحصص للون الأحمر)')) {
+          for (let key in scheduleData) {
+              scheduleData[key].isPrepared = false;
+          }
+          localStorage.setItem('hael_schedule_data', JSON.stringify(scheduleData));
+          renderSchedule();
+      }
+  }
+
+  function checkAfternoonNotification() {
+      if (sessionStorage.getItem('hael_notified_today')) return;
+      const now = new Date();
+      if (now.getHours() >= 14) { // الساعة 2 مساءً أو أكثر
+          // حساب رقم اليوم للغد (0 الأحد، 6 السبت في جافاسكريبت)
+          const jsToOurDay = { 6: 0, 0: 1, 1: 2, 2: 3, 3: 4, 4: 5, 5: 0 }; 
+          let tomorrowJsDay = (now.getDay() + 1) % 7;
+          let tomorrowOurIndex = jsToOurDay[tomorrowJsDay];
+          let tomorrowName = DAYS[tomorrowOurIndex];
+
+          let pendingCount = 0;
+          for (let p = 1; p <= PERIODS; p++) {
+              let slotData = scheduleData[`${tomorrowOurIndex}-${p}`];
+              if (slotData && slotData.bookId && !slotData.isPrepared) {
+                  pendingCount++;
+              }
+          }
+
+          if (pendingCount > 0) {
+              document.getElementById('notifyMsg').textContent = `لديك غداً (${tomorrowName}) ${pendingCount} حصص بانتظار التحضير. انقر على أزرارها الحمراء في الجدول لإنشائها آلياً الآن!`;
+              document.getElementById('notificationModal').classList.add('is-active');
+              sessionStorage.setItem('hael_notified_today', 'true');
+          }
+      }
+  }
+
+  function openModal(slotId, dayName, periodNum) {
+    const data = scheduleData[slotId];
+    document.getElementById('modalTitle').textContent = `${dayName} - الحصة ${periodNum}`;
+    document.getElementById('slotId').value = slotId;
+    document.getElementById('inpSubject').value = data ? data.subject : '';
+    document.getElementById('inpGrade').value = data ? data.grade : '';
+    document.getElementById('inpBook').value = data && data.bookId ? data.bookId : '';
+    document.getElementById('btnDeleteSlot').style.display = data ? 'block' : 'none';
+    document.getElementById('slotModal').classList.add('is-active');
+  }
+
+  function closeModal() { document.getElementById('slotModal').classList.remove('is-active'); }
+
+  function saveSlot() {
+    const slotId = document.getElementById('slotId').value;
+    const subject = document.getElementById('inpSubject').value.trim();
+    const grade = document.getElementById('inpGrade').value.trim();
+    const bookSelect = document.getElementById('inpBook');
+    const bookId = bookSelect.value;
+    const bookName = bookId ? bookSelect.options[bookSelect.selectedIndex].text : '';
+
+    if (!subject) return alert('الرجاء إدخال اسم المادة!');
+    
+    // الاحتفاظ بحالة التحضير إذا كانت الحصة موجودة مسبقاً
+    const isPrepared = scheduleData[slotId] ? scheduleData[slotId].isPrepared : false;
+    
+    scheduleData[slotId] = { subject, grade, bookId, bookName, isPrepared };
+    localStorage.setItem('hael_schedule_data', JSON.stringify(scheduleData));
+    closeModal(); renderSchedule();
+  }
+
+  function deleteSlot() {
+    const slotId = document.getElementById('slotId').value;
+    delete scheduleData[slotId];
+    localStorage.setItem('hael_schedule_data', JSON.stringify(scheduleData));
+    closeModal(); renderSchedule();
+  }
+
+  let currentPrepSlot = null;
+  let currentPrepBook = null;
+
+  function startAutoPrep(slotId) {
+    const data = scheduleData[slotId];
+    if (!data || !data.bookId) return;
+    
+    currentPrepSlot = slotId;
+    currentPrepBook = libraryBooks.find(b => b.id == data.bookId);
+    
+    if (!currentPrepBook) {
+        alert("الكتاب غير موجود في المكتبة!");
+        return;
+    }
+
+    document.getElementById('prepModalTitle').textContent = `تحضير: ${data.subject}`;
+    
+    const tocContainer = document.getElementById('prepTocContainer');
+    const manualContainer = document.getElementById('prepManualContainer');
+    const tocList = document.getElementById('prepTocList');
+    
+    if (currentPrepBook.toc && currentPrepBook.toc.length > 0) {
+        tocContainer.style.display = 'block';
+        manualContainer.style.display = 'none';
+        
+        let html = '';
+        currentPrepBook.toc.forEach(t => {
+            html += `<button class="toc-item-btn" onclick="executePrep(${t.page}, ${t.endPage})">
+                <span>${t.title}</span>
+                <span class="toc-pages-badge">ص ${t.page} - ${t.endPage}</span>
+            </button>`;
+        });
+        tocList.innerHTML = html;
+        
+    } else {
+        tocContainer.style.display = 'none';
+        manualContainer.style.display = 'block';
+        
+        let lastPage = parseInt(localStorage.getItem('hael_progress_' + currentPrepBook.id)) || 1;
+        document.getElementById('prepFromPage').value = lastPage;
+        document.getElementById('prepToPage').value = lastPage + 2;
+    }
+    
+    document.getElementById('prepModal').classList.add('is-active');
+  }
+  
+  function closePrepModal() {
+      document.getElementById('prepModal').classList.remove('is-active');
+  }
+
+  function confirmManualPrep() {
+      const from = parseInt(document.getElementById('prepFromPage').value) || 1;
+      const to = parseInt(document.getElementById('prepToPage').value) || from;
+      executePrep(from, to);
+  }
+
+  function executePrep(fromPage, toPage) {
+      if (!currentPrepSlot || !currentPrepBook) return;
+      const data = scheduleData[currentPrepSlot];
+      
+      // حفظ حالة التحضير (أخضر) قبل الانتقال
+      scheduleData[currentPrepSlot].isPrepared = true;
+      localStorage.setItem('hael_schedule_data', JSON.stringify(scheduleData));
+      
+      localStorage.setItem('hael_progress_' + currentPrepBook.id, toPage + 1);
+      
+      const url = `index.html?auto_prep=2&bookId=${currentPrepBook.id}&subject=${encodeURIComponent(data.subject)}&grade=${encodeURIComponent(data.grade)}&from=${fromPage}&to=${toPage}`;
+      window.location.href = url;
+  }
+
+  window.onload = async () => {
+    await loadLibraryBooks();
+    renderSchedule();
+    // التحقق من التنبيه بعد 1.5 ثانية من فتح الجدول لإعطاء تجربة سلسة
+    setTimeout(checkAfternoonNotification, 1500);
+  };
+</script>
+</body>
+
+<!-- Mirrored from https://teacheraihayel.netlify.app/schedule.html by HTTrack Website Copier/3.x [XR&CO], Sun, 04 Oct 2026 16:15:11 GMT -->
+</html>
+

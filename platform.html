@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<!-- Mirrored from https://teacheraihayel.netlify.app/platform.html by HTTrack Website Copier/3.x [XR&CO], Sun, 04 Oct 2026 16:15:26 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="UTF-8">
+<!-- This site is hosted on Netlify. Anyone can build and deploy a site
+     like this one for free: https://netlify.new/?utm_campaign=loops&utm_source=ai-legible&utm_medium=owned&utm_content=comment&utm_id=44cc1212-9d5f-474b-941a-73b7d8d02c3e
+     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>منصة الهائل المدرسية</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --secondary: #3b82f6;
+            --accent: #10b981;
+            --warning: #f59e0b;
+            --bg: #f3f4f6;
+            --surface: #ffffff;
+            --text: #1f2937;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { background-color: var(--bg); color: var(--text); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        
+        /* شريط التنقل العلوي */
+        .top-nav { background: var(--primary); color: white; padding: 18px; text-align: center; font-weight: bold; font-size: 18px; display: none; position: relative; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.15); flex-shrink: 0; }
+        .back-btn { position: absolute; right: 15px; top: 18px; color: white; text-decoration: none; font-size: 14px; cursor: pointer; background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 6px; }
+
+        /* الشاشات - بنظام الطبقات المستقرة */
+        .screen { display: none; height: 100%; width: 100%; overflow-y: auto; background: var(--bg); padding-bottom: 40px; -webkit-overflow-scrolling: touch; }
+        .screen.active { display: flex; flex-direction: column; }
+        
+        /* شاشة الترحيب */
+        #home-screen { background: linear-gradient(135deg, #1e3a8a, #3b82f6); justify-content: center; align-items: center; text-align: center; padding: 20px; color: white; }
+        .logo-box { width: 90px; height: 90px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        
+        /* شبكة الأزرار */
+        .home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; max-width: 350px; margin-top: 10px; }
+        .home-btn { padding: 15px 10px; background: rgba(255,255,255,0.1); border: 2px solid white; border-radius: 12px; color: white; font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .home-btn:active { background: white; color: var(--primary); }
+        .home-btn span.icon { font-size: 24px; }
+        .btn-full { grid-column: 1 / -1; }
+
+        /* الحاويات والتصميم العام */
+        .container { padding: 15px; max-width: 600px; margin: 0 auto; width: 100%; }
+        .card { background: var(--surface); padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 15px; }
+        h2 { color: var(--primary); margin-bottom: 15px; font-size: 18px; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 13.5px; color: #4b5563; }
+        input.std-input, select.std-input { width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 15px; margin-bottom: 15px; }
+        .ip-box { width: 50px; padding: 9px 4px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 14px; text-align: center; direction: ltr; }
+        .ip-box:focus { border-color: var(--secondary, #2563eb); outline: none; }
+        .btn { width: 100%; padding: 14px; background: var(--accent); color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; }
+        .btn-small { padding: 8px 12px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; border: none; }
+
+        /* المنصة */
+        #platform-screen { flex-direction: column; background: #fff; height: 100%; }
+        .platform-header { padding: 10px; background: #f8fafc; border-bottom: 1px solid #ddd; display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
+        .platform-header input { flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 6px; direction: ltr; text-align: right; font-size:14px; }
+        .platform-header button { padding: 10px 15px; background: var(--accent); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        .platform-iframe { flex: 1; width: 100%; border: none; background: #fff; display: block; height: 100%; }
+        
+        /* الأرشيف والدرجات */
+        .subject-group { margin-bottom: 20px; background: #fff; padding: 15px; border-radius: 12px; border: 1px solid #e5e7eb; }
+        .subject-title { font-size: 16px; font-weight: 900; color: var(--primary); margin-bottom: 10px; display: flex; justify-content: space-between; }
+        .progress-bar { width: 100%; background: #e5e7eb; height: 10px; border-radius: 5px; overflow: hidden; margin-bottom: 15px; }
+        .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.5s; }
+        .item-row { background: #f9fafb; border: 1px solid #e5e7eb; padding: 12px; border-radius: 8px; margin-bottom: 8px; }
+        .item-title { font-weight: bold; font-size: 14.5px; color: var(--primary); display: block; margin-bottom: 4px; }
+        .item-meta { font-size: 12px; color: #6b7280; display: block; margin-bottom: 10px; }
+        .grade-badge { float: left; background: var(--primary); color: white; padding: 5px 10px; border-radius: 20px; font-weight: bold; font-size: 14px; }
+
+        /* جدول الحصص */
+        .table-responsive { overflow-x: auto; margin-bottom: 15px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        table { width: 100%; border-collapse: collapse; min-width: 500px; background: white; text-align: center; border: 3px solid var(--primary); }
+        th { background: var(--primary); color: white; padding: 12px; font-size: 15px; border: 2px solid var(--primary); }
+        td { border: 2px solid var(--secondary); padding: 0; }
+        td input { width: 100%; height: 45px; border: none; text-align: center; font-size: 14px; font-weight: bold; color: #1f2937; background: transparent; }
+        td input:focus { background: #eff6ff; outline: none; }
+        td.day-name { background: #e0f2fe; font-weight: 900; color: var(--primary); padding: 10px; width: 80px; border: 2px solid var(--primary); }
+        
+        /* المشغل الشامل الموحد */
+        #unified-player { display:none; position:fixed; inset:0; background:#000; z-index:3000; flex-direction:column; }
+        .player-header { background: #1f2937; color:white; padding:15px; display:flex; justify-content:space-between; align-items:center; }
+        .player-body { flex:1; display:flex; align-items:center; justify-content:center; background:#fff; overflow:hidden; position:relative; }
+        .pdf-fallback { position:absolute; bottom:20px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.8); color:white; padding:10px 20px; border-radius:20px; font-size:13px; text-decoration:none; display:none; }
+
+        /* عناصر التحكم بتكبير/تصغير الصور */
+        .zoom-viewport { position:relative; width:100%; height:100%; overflow:hidden; background:#000; touch-action:none; }
+        .zoom-viewport img { max-width:100%; max-height:100%; object-fit:contain; -webkit-user-drag:none; user-select:none; pointer-events:none; }
+        .zoom-controls { position:absolute; bottom:16px; left:50%; transform:translateX(-50%); display:flex; gap:8px; z-index:20; background:rgba(0,0,0,0.55); padding:6px; border-radius:14px; }
+        .zoom-controls button { width:40px; height:40px; border-radius:10px; border:none; background:rgba(255,255,255,0.15); color:#fff; font-size:18px; font-weight:bold; cursor:pointer; }
+        .zoom-controls button:active { background:rgba(255,255,255,0.35); }
+        .zoom-hint-badge { position:absolute; top:14px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.6); color:#fff; padding:5px 14px; border-radius:14px; font-size:11px; opacity:0; transition:opacity 0.3s; pointer-events:none; z-index:20; }
+    </style>
+</head>
+<body>
+
+    <div class="top-nav" id="top-nav">
+        <span class="back-btn" onclick="openScreen('home')">⬅ العودة</span>
+        <span id="nav-title">منصة الهائل المدرسية</span>
+    </div>
+
+    <!-- 1. الشاشة الرئيسية -->
+    <div id="home-screen" class="screen active">
+        <div class="logo-box">🎓</div>
+        <h1 style="margin-bottom: 5px; font-size: 22px;">أهلاً بكم في</h1>
+        <h2 style="border: none; color: white; font-size: 26px; margin-bottom: 25px; padding:0;">منصة الهائل المدرسية</h2>
+        
+        <div class="home-grid">
+           <button class="home-btn btn-full" style="background:#b71c1c; border-color:#fca5a5;" onclick="window.location.href='index-2.html'">
+                <span class="icon">🔙</span> العودة لدفتر التحضير
+            </button>
+            <button class="home-btn btn-full" onclick="openScreen('platform')">
+                <span class="icon">🌐</span> منصة الطالب التعليمية
+            </button>
+            <button class="home-btn btn-full" style="position:relative; border-color:#fbbf24;" onclick="openScreen('review')">
+                <span class="icon">📇</span> مراجعتي اليوم
+                <span id="review-badge" style="display:none; position:absolute; top:-8px; left:-8px; background:#ef4444; color:#fff; font-size:12px; font-weight:900; min-width:24px; height:24px; border-radius:12px; align-items:center; justify-content:center; padding:0 6px; box-shadow:0 2px 6px rgba(0,0,0,0.3);"></span>
+            </button>
+            <button class="home-btn" onclick="openScreen('archive')">
+                <span class="icon">📚</span> الأرشيف
+            </button>
+            <button class="home-btn" onclick="openScreen('grades')">
+                <span class="icon">📊</span> اختباراتي
+            </button>
+            <button class="home-btn" onclick="openScreen('schedule')">
+                <span class="icon">🗓️</span> جدول الحصص
+            </button>
+            <button class="home-btn" onclick="openScreen('settings')">
+                <span class="icon">⚙️</span> حسابي
+            </button>
+            <button class="home-btn btn-full" onclick="openScreen('teacher-control')">
+                <span class="icon">🧑‍🏫</span> لوحة تحكم المعلم
+            </button>
+        </div>
+    </div>
+
+    <!-- 1ب. شاشة مراجعتي (نظام Leitner) -->
+    <div id="review-screen" class="screen">
+        <div class="container">
+            <div id="review-progress-wrap" style="display:none; margin-bottom:16px;">
+                <div style="display:flex; justify-content:space-between; font-size:12px; color:#6b7280; margin-bottom:5px;">
+                    <span id="review-progress-text"></span>
+                    <span id="review-progress-pct"></span>
+                </div>
+                <div style="background:#e5e7eb; border-radius:20px; height:10px; overflow:hidden;">
+                    <div id="review-progress-bar" style="background:linear-gradient(90deg,#10b981,#3b82f6); height:100%; width:0%; transition:width 0.3s ease;"></div>
+                </div>
+            </div>
+            <div id="review-card-box" class="card" style="display:none;">
+                <p id="review-subject" style="text-align:center; color:var(--secondary); font-weight:bold; font-size:12.5px; margin-bottom:15px;"></p>
+                <p id="review-question" style="font-size:17px; font-weight:bold; color:var(--text); line-height:1.8; margin-bottom:20px; text-align:center;"></p>
+                <button class="btn" id="reveal-btn" style="background:#3b82f6;" onclick="revealAnswer()">🔓 إظهار الإجابة</button>
+                <div id="review-answer-wrap" style="display:none; background:#ecfdf5; border:2px solid #10b981; border-radius:10px; padding:15px; margin-top:10px;">
+                    <p id="review-answer" style="font-weight:900; color:#047857; font-size:16px; text-align:center; margin-bottom:8px;"></p>
+                    <p id="review-explanation" style="color:#4b5563; font-size:13px; text-align:center;"></p>
+                </div>
+                <div id="review-rate-buttons" style="display:none; gap:10px; margin-top:15px;">
+                    <button class="btn" style="background:#ef4444;" onclick="rateCard(false)">❌ لا أعرفها</button>
+                    <button class="btn" style="background:#10b981;" onclick="rateCard(true)">✅ أعرفها</button>
+                </div>
+            </div>
+            <div id="review-empty" style="display:none; text-align:center; padding:40px 20px;">
+                <div style="font-size:60px; margin-bottom:15px;">🎉</div>
+                <h2 style="border:none;">لا توجد بطاقات مستحقة الآن</h2>
+                <p style="color:#6b7280; margin-top:10px; font-size:14px;">افتح ملفات الاختبارات في الأرشيف لاستخراج بطاقات جديدة تلقائياً، أو عد لاحقاً حسب جدول المراجعة.</p>
+            </div>
+            <button class="btn" style="background:#6b7280; margin-top:20px;" onclick="openScreen('flashcards-list')">📋 إدارة كل البطاقات</button>
+        </div>
+    </div>
+
+    <!-- 1ج. شاشة إدارة كل البطاقات -->
+    <div id="flashcards-list-screen" class="screen">
+        <div class="container">
+            <h2>كل البطاقات (<span id="flashcards-total-count">0</span>)</h2>
+            <div class="card" id="flashcards-stats-card" style="display:none;">
+                <div style="display:flex; justify-content:space-between; font-size:12px; color:#6b7280; margin-bottom:5px;">
+                    <span>نسبة الإتقان الكلية</span>
+                    <span id="mastery-pct-text"></span>
+                </div>
+                <div style="background:#e5e7eb; border-radius:20px; height:10px; overflow:hidden; margin-bottom:10px;">
+                    <div id="mastery-progress-bar" style="background:linear-gradient(90deg,#f59e0b,#10b981); height:100%; width:0%; transition:width 0.3s ease;"></div>
+                </div>
+                <button class="btn" style="background:#ef4444; margin:0;" onclick="deleteAllFlashcards()">🗑️ حذف كل البطاقات</button>
+            </div>
+            <div id="flashcards-manager-list"></div>
+        </div>
+    </div>
+
+    <!-- 2. الإعدادات -->
+    <div id="settings-screen" class="screen">
+        <div class="container">
+            <div class="card">
+                <h2>بيانات الطالب</h2>
+                <label>الاسم الرباعي:</label> <input type="text" id="set-name" class="std-input">
+                <label>المدرسة:</label> <input type="text" id="set-school" class="std-input">
+                <label>الصف:</label> <input type="text" id="set-grade" class="std-input">
+                <label>المادة المفضلة:</label> <input type="text" id="set-subject" class="std-input">
+                <button class="btn" onclick="saveProfile()">حفظ</button>
+            </div>
+            <div class="card">
+                <h2>🔗 روابط الخادم</h2>
+                <p style="font-size:12.5px; color:#6b7280; margin-bottom:10px;">اختر الرابط الذي تريد الاتصال به الآن، أو أضف رابطاً جديداً:</p>
+                <div id="saved-links-list" class="saved-links-list-target" style="margin-bottom:18px;"></div>
+
+                <label style="font-size:13px; color:#6b7280;">إضافة رابط جديد:</label>
+                <div dir="ltr" style="display:flex; align-items:center; gap:5px; flex-wrap:wrap; margin:10px 0; direction:ltr;">
+                    <input type="text" id="ip-prefix" class="ip-box" style="width:68px; background:#f3f4f6; color:#6b7280;" value="http://" readonly>
+                    <input type="number" id="ip-o1" class="ip-box" placeholder="10" oninput="ipAutoJump(this,'ip-o2')">
+                    <span>.</span>
+                    <input type="number" id="ip-o2" class="ip-box" placeholder="124" oninput="ipAutoJump(this,'ip-o3')">
+                    <span>.</span>
+                    <input type="number" id="ip-o3" class="ip-box" placeholder="196" oninput="ipAutoJump(this,'ip-o4')">
+                    <span>.</span>
+                    <input type="number" id="ip-o4" class="ip-box" placeholder="30" oninput="ipAutoJump(this,'ip-port')">
+                    <span>:</span>
+                    <input type="number" id="ip-port" class="ip-box" style="width:66px;" placeholder="8080" value="8080" oninput="updateIpPreview()">
+                </div>
+                <p id="ip-preview" dir="ltr" style="font-size:12.5px; color:#2563eb; direction:ltr; text-align:left; margin-bottom:10px; font-weight:bold;"></p>
+                <button class="btn" style="background:#10b981;" onclick="addSavedLink()">➕ حفظ هذا الرابط وتفعيله</button>
+            </div>
+            <div class="card">
+                <h2>🔒 حماية لوحة تحكم المعلم</h2>
+                <p style="font-size:12.5px; color:#6b7280; margin-bottom:10px;">اتركها فارغة إن كنت لا تريد كلمة مرور (دخول مباشر)، أو ضع كلمة مرور خاصة بك يمكنك تغييرها متى شئت من هنا:</p>
+                <input type="text" id="teacher-pass-input" class="std-input" dir="ltr" style="text-align:left;" placeholder="اتركها فارغة = بدون كلمة مرور">
+                <button class="btn" style="background:#7c3aed;" onclick="saveTeacherPassword()">💾 حفظ كلمة المرور</button>
+            </div>
+            <div class="card">
+                <h2>النسخ الاحتياطي</h2>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn" style="background:#3b82f6;" onclick="exportBackup()">📥 حفظ</button>
+                    <button class="btn" style="background:#f59e0b;" onclick="document.getElementById('import-file').click()">📤 استيراد</button>
+                    <input type="file" id="import-file" style="display:none;" accept=".json" onchange="importBackup(event)">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. المنصة التعليمية -->
+    <div id="platform-screen" class="screen">
+        <div class="platform-header">
+            <button onclick="toggleLinkPicker()" style="background:#7c3aed; flex-shrink:0; width:auto; padding:0 12px; font-size:13px;" title="اضغط هنا لتغيير رابط الاتصال بالخادم">🔗 الرابط</button>
+            <input type="text" id="server-url" value="http://10.124.196.30:8080/">
+            <button onclick="enterPlatform()">تحديث 🔄</button>
+        </div>
+        <div id="link-picker-panel" style="display:none; background:#fff; border-bottom:2px solid #7c3aed; padding:14px; box-shadow:0 4px 10px rgba(0,0,0,0.08); position:relative; z-index:15;">
+            <div style="background:#f5f3ff; border:1px solid #ddd6fe; border-radius:10px; padding:10px 12px; margin-bottom:12px;">
+                <p style="font-size:12.5px; color:#5b21b6; font-weight:bold; margin-bottom:4px;">📌 كيف تستخدم هذه الخانات؟</p>
+                <p style="font-size:12px; color:#4b5563; line-height:1.7;">
+                    اطلب من معلمك رقم الرابط (مثال: <bdi dir="ltr" style="font-weight:bold;">http://10.124.196.30:8080</bdi>).
+                    ثم اكتب كل رقم في خانته: أول رقم بعد <bdi dir="ltr">http://</bdi> في الخانة الأولى (هنا <b>10</b>)، والرقم الثاني (<b>124</b>) في الخانة التي تليها، وهكذا حتى الرقم الرابع (<b>30</b>)، ثم رقم المنفذ بعد النقطتين (<b>8080</b>) في آخر خانة. لا تكتب النقاط ولا "http://" بنفسك، الخانات تجمعها لك تلقائياً.
+                </p>
+            </div>
+            <p style="font-size:12.5px; color:#6b7280; margin-bottom:8px;">أو اختر رابطاً محفوظاً سابقاً من هذه القائمة:</p>
+            <div class="saved-links-list-target" style="margin-bottom:14px;"></div>
+
+            <label style="font-size:12.5px; color:#6b7280;">إضافة رابط جديد:</label>
+            <div dir="ltr" style="display:flex; align-items:center; gap:5px; flex-wrap:wrap; margin:8px 0; direction:ltr;">
+                <input type="text" class="ip-box" style="width:64px; background:#f3f4f6; color:#6b7280;" value="http://" readonly>
+                <input type="number" id="ip-o1-top" class="ip-box" placeholder="10" oninput="ipAutoJump(this,'ip-o2-top')">
+                <span>.</span>
+                <input type="number" id="ip-o2-top" class="ip-box" placeholder="124" oninput="ipAutoJump(this,'ip-o3-top')">
+                <span>.</span>
+                <input type="number" id="ip-o3-top" class="ip-box" placeholder="196" oninput="ipAutoJump(this,'ip-o4-top')">
+                <span>.</span>
+                <input type="number" id="ip-o4-top" class="ip-box" placeholder="30" oninput="ipAutoJump(this,'ip-port-top')">
+                <span>:</span>
+                <input type="number" id="ip-port-top" class="ip-box" style="width:60px;" placeholder="8080" value="8080" oninput="updateIpPreview('-top')">
+            </div>
+            <p id="ip-preview-top" dir="ltr" style="font-size:12px; color:#2563eb; direction:ltr; text-align:left; margin-bottom:10px; font-weight:bold;"></p>
+            <button class="btn" style="background:#10b981; margin:0;" onclick="addSavedLink('-top')">➕ حفظ وتفعيل</button>
+        </div>
+        <iframe class="platform-iframe" id="main-frame" src="about:blank"></iframe>
+    </div>
+
+    <!-- 3.5 لوحة تحكم المعلم -->
+    <div id="teacher-control-screen" class="screen">
+        <div class="platform-header">
+            <span style="font-size:13px; color:#6b7280; flex:1;">تعتمد نفس الرابط النشط حالياً + <span dir="ltr" style="font-weight:bold;">teacher-control.html</span></span>
+            <button onclick="enterTeacherControl()">تحديث 🔄</button>
+        </div>
+        <iframe class="platform-iframe" id="teacher-control-frame" src="about:blank"></iframe>
+    </div>
+
+    <!-- 4. الأرشيف -->
+    <div id="archive-screen" class="screen">
+        <div class="container">
+            <div style="display:flex; gap:10px; margin-bottom:15px; align-items:center;">
+                <select id="archive-filter" class="std-input" style="flex:1; margin:0; padding:10px;" onchange="renderArchive()">
+                    <option value="all">كل المواد</option>
+                    <option value="أحياء">أحياء</option>
+                    <option value="فيزياء">فيزياء</option>
+                    <option value="كيمياء">كيمياء</option>
+                    <option value="رياضيات">رياضيات</option>
+                    <option value="لغة إنجليزية">لغة إنجليزية</option>
+                    <option value="مواد عامة">مواد عامة</option>
+                </select>
+                <button class="btn" style="width:auto; padding:10px 15px; font-size:14px; background:#2563eb;" onclick="document.getElementById('import-local-file').click()">➕ استيراد</button>
+                <input type="file" id="import-local-file" style="display:none;" onchange="importLocalFile(event)">
+            </div>
+            <div id="archive-list"></div>
+        </div>
+    </div>
+
+    <!-- 5. درجاتي واختباراتي -->
+    <div id="grades-screen" class="screen">
+        <div class="container">
+            <div class="card">
+                <h2>➕ إضافة درجة يدوياً</h2>
+                <input type="text" id="gr-title" class="std-input" placeholder="اسم الاختبار (مثال: اختبار الوحدة الأولى)">
+                <div style="display:flex; gap:10px;">
+                    <input type="text" id="gr-subject" class="std-input" placeholder="المادة">
+                    <input type="number" id="gr-score" class="std-input" placeholder="الدرجة">
+                    <input type="number" id="gr-total" class="std-input" placeholder="من">
+                </div>
+                <button class="btn" onclick="addGradeManual()">حفظ</button>
+            </div>
+            <h2 style="font-size:16px; margin-bottom:15px; color:#4b5563;">سجل الاختبارات والدرجات</h2>
+            <div id="grades-list"></div>
+        </div>
+    </div>
+
+    <!-- 6. جدول الحصص -->
+    <div id="schedule-screen" class="screen">
+        <div class="container">
+            <div class="card">
+                <h2>جدول الحصص الأسبوعي</h2>
+                <p style="font-size:12px; color:#666; margin-bottom:15px;">اضغط على أي خانة واكتب اسم المادة.</p>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr><th>اليوم</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th></tr>
+                        </thead>
+                        <tbody id="scheduleBody"></tbody>
+                    </table>
+                </div>
+                <button class="btn" onclick="saveSchedule()">حفظ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- المشغل الشامل الموحد -->
+    <div id="unified-player">
+        <div class="player-header">
+            <span id="player-title" style="font-weight:bold; font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:70%;">الدرس</span>
+            <button style="background:#ef4444; color:white; border:none; padding:6px 12px; border-radius:5px; font-weight:bold; cursor:pointer;" onclick="closePlayer()">إغلاق ✖</button>
+        </div>
+        <div class="player-body" id="player-body"></div>
+        <a id="pdf-fallback-btn" class="pdf-fallback" href="#" target="_blank">لم يظهر الملف؟ اضغط هنا لفتحه</a>
+    </div>
+
+    <script src="zoom-pan.js"></script>
+    <script>
+        const DEFAULT_IP = "http://10.124.196.30:8080/";
+        let currentIp = localStorage.getItem("app_server_ip") || DEFAULT_IP;
+        let currentBlobUrl = null;
+        let currentZoomCtrl = null;
+
+        // ============ لوحة تحكم المعلم: كلمة مرور قابلة للتغيير من داخل التطبيق (فارغة = بدون حماية) ============
+        let teacherUnlocked = false;
+        function checkTeacherPassword() {
+            if (teacherUnlocked) return true;
+            const savedPass = localStorage.getItem("app_teacher_password") || "";
+            if (!savedPass) { teacherUnlocked = true; return true; }
+            const pass = prompt("🔒 هذه الشاشة خاصة بالمعلم فقط\nأدخل كلمة المرور:");
+            if (pass === null) return false;
+            if (pass !== savedPass) { alert("كلمة المرور غير صحيحة ❌"); return false; }
+            teacherUnlocked = true;
+            return true;
+        }
+        function saveTeacherPassword() {
+            const val = document.getElementById("teacher-pass-input").value.trim();
+            localStorage.setItem("app_teacher_password", val);
+            alert(val ? "تم حفظ كلمة المرور بنجاح 🔒" : "تم إلغاء كلمة المرور — الدخول للوحة المعلم أصبح مباشراً بدون طلب كلمة مرور.");
+        }
+        function enterTeacherControl() {
+            const base = currentIp.replace(/\/?$/, '/');
+            const url = base + 'teacher-control.html';
+            const iframe = document.getElementById("teacher-control-frame");
+            iframe.src = 'about:blank';
+            setTimeout(() => { iframe.src = url; }, 50);
+        }
+        // ============ نهاية قسم كلمة مرور المعلم ============
+        
+        let db;
+        function initDB() {
+            return new Promise((resolve, reject) => {
+                if (db) return resolve(db);
+                const req = indexedDB.open("AlHailSchoolDB.html", 2);
+                req.onerror = () => reject(req.error);
+                req.onsuccess = () => { db = req.result; resolve(db); };
+                req.onupgradeneeded = (e) => {
+                    const database = e.target.result;
+                    if (!database.objectStoreNames.contains('archive')) database.createObjectStore('archive', { keyPath: 'id' });
+                    if (!database.objectStoreNames.contains('grades')) database.createObjectStore('grades', { keyPath: 'id' });
+                    if (!database.objectStoreNames.contains('flashcards')) database.createObjectStore('flashcards', { keyPath: 'id' });
+                };
+            });
+        }
+
+        async function dbPut(storeName, item) {
+            const database = await initDB();
+            return new Promise((resolve, reject) => {
+                const tx = database.transaction(storeName, 'readwrite');
+                tx.objectStore(storeName).put(item);
+                tx.oncomplete = () => resolve(true);
+                tx.onerror = () => reject(tx.error);
+            });
+        }
+
+        async function dbGetAll(storeName) {
+            const database = await initDB();
+            return new Promise((resolve, reject) => {
+                const tx = database.transaction(storeName, 'readonly');
+                const req = tx.objectStore(storeName).getAll();
+                req.onsuccess = () => resolve(req.result);
+                req.onerror = () => reject(req.error);
+            });
+        }
+
+        async function dbDelete(storeName, id) {
+            const database = await initDB();
+            return new Promise((resolve, reject) => {
+                const tx = database.transaction(storeName, 'readwrite');
+                tx.objectStore(storeName).delete(id);
+                tx.oncomplete = () => resolve(true);
+                tx.onerror = () => reject(tx.error);
+            });
+        }
+
+        window.onload = async () => { 
+            await initDB();
+            loadProfile(); 
+            document.getElementById("server-url").value = currentIp; 
+            renderSavedLinks();
+            updateIpPreview();
+            renderSchedule(); 
+            renderArchive();
+            renderGrades();
+            renderHomeBadge();
+            document.getElementById("teacher-pass-input").value = localStorage.getItem("app_teacher_password") || "";
+        };
+
+        function openScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            
+            if(screenId === 'home') {
+                teacherUnlocked = false; // إعادة القفل حتى لا يدخل الطالب لاحقاً بدون كلمة مرور صحيحة
+                document.getElementById("top-nav").style.display = "none";
+                document.getElementById("home-screen").classList.add('active');
+            } else {
+                if(screenId === 'teacher-control' && !checkTeacherPassword()) {
+                    document.getElementById("top-nav").style.display = "none";
+                    document.getElementById("home-screen").classList.add('active');
+                    return;
+                }
+                document.getElementById("top-nav").style.display = "block";
+                const target = document.getElementById(screenId + "-screen");
+                target.classList.add('active');
+                
+                if(screenId === 'platform') {
+                    document.getElementById("nav-title").textContent = "المنصة التعليمية";
+                    if(document.getElementById("main-frame").src === "about:blank") enterPlatform();
+                } else if(screenId === 'settings') document.getElementById("nav-title").textContent = "إعدادات حسابي";
+                else if(screenId === 'archive') { document.getElementById("nav-title").textContent = "أرشيف الدروس"; renderArchive(); }
+                else if(screenId === 'grades') { document.getElementById("nav-title").textContent = "اختباراتي"; renderGrades(); }
+                else if(screenId === 'schedule') document.getElementById("nav-title").textContent = "جدول الحصص";
+                else if(screenId === 'review') { document.getElementById("nav-title").textContent = "مراجعتي اليوم"; openReviewScreen(); }
+                else if(screenId === 'flashcards-list') { document.getElementById("nav-title").textContent = "كل البطاقات"; renderFlashcardsManager(); }
+                else if(screenId === 'teacher-control') {
+                    document.getElementById("nav-title").textContent = "لوحة تحكم المعلم";
+                    if(document.getElementById("teacher-control-frame").src === "about:blank") enterTeacherControl();
+                }
+            }
+        }
+
+        function loadProfile() {
+            const profile = JSON.parse(localStorage.getItem("app_user_profile") || "{}");
+            if(profile.name) document.getElementById("set-name").value = profile.name;
+            if(profile.school) document.getElementById("set-school").value = profile.school;
+            if(profile.grade) document.getElementById("set-grade").value = profile.grade;
+            if(profile.subject) document.getElementById("set-subject").value = profile.subject;
+        }
+
+        function saveProfile() {
+            const name = document.getElementById("set-name").value.trim();
+            localStorage.setItem("app_user_profile", JSON.stringify({ name, school: document.getElementById("set-school").value.trim(), grade: document.getElementById("set-grade").value.trim(), subject: document.getElementById("set-subject").value.trim() }));
+            if(!name) { alert("يرجى إدخال اسمك"); return; }
+            alert("تم الحفظ بنجاح!"); openScreen('home');
+        }
+
+        function enterPlatform() {
+            let url = document.getElementById("server-url").value.trim();
+            if(!url) return;
+            if (!url.startsWith("http")) url = "http://" + url;
+            localStorage.setItem("app_server_ip", url); currentIp = url;
+            
+            const iframe = document.getElementById("main-frame");
+            // تفريغ الإطار لضمان جلب التحديثات الجديدة من الخادم بقوة
+            iframe.src = 'about:blank'; 
+            setTimeout(() => { iframe.src = url; }, 50);
+        }
+
+        // ============ إدارة الروابط المتعددة المحفوظة ============
+        function getSavedLinks() {
+            let links = JSON.parse(localStorage.getItem("app_saved_links") || "null");
+            if (!links || links.length === 0) links = [DEFAULT_IP];
+            return links;
+        }
+        function saveSavedLinksList(links) { localStorage.setItem("app_saved_links", JSON.stringify(links)); }
+
+        // تُحدّث كل الأماكن التي تعرض قائمة الروابط في نفس الوقت (الإعدادات + أعلى شاشة المنصة)
+        function renderSavedLinks() {
+            const links = getSavedLinks();
+            const rowsHtml = links.map(l => `
+                <div dir="ltr" style="display:flex; align-items:center; gap:8px; padding:9px; border:2px solid ${l === currentIp ? '#2563eb' : '#e5e7eb'}; border-radius:10px; margin-bottom:6px; background:${l === currentIp ? '#eff6ff' : '#fff'}; direction:ltr;">
+                    <input type="radio" name="active-link" ${l === currentIp ? 'checked' : ''} onchange="setActiveLink('${l}')" style="flex-shrink:0;">
+                    <span style="flex:1; text-align:left; font-size:13px; color:#1e293b; cursor:pointer;" onclick="setActiveLink('${l}')">${l}</span>
+                    <button class="btn-small" style="background:#fee2e2; color:#dc2626; width:auto; padding:5px 10px; flex-shrink:0;" onclick="deleteSavedLink('${l}')">🗑️</button>
+                </div>
+            `).join('');
+            document.querySelectorAll('.saved-links-list-target').forEach(el => el.innerHTML = rowsHtml);
+        }
+
+        function setActiveLink(url) {
+            currentIp = url;
+            localStorage.setItem("app_server_ip", url);
+            const serverInput = document.getElementById("server-url");
+            if (serverInput) serverInput.value = url;
+            renderSavedLinks();
+        }
+
+        function deleteSavedLink(url) {
+            let links = getSavedLinks().filter(l => l !== url);
+            if (links.length === 0) links = [DEFAULT_IP];
+            saveSavedLinksList(links);
+            if (currentIp === url) setActiveLink(links[0]); else renderSavedLinks();
+        }
+
+        // ينقل التركيز تلقائياً للخانة التالية بعد إدخال 3 أرقام (أو رقم أكبر من 25 يجعل رقماً ثالثاً مستحيلاً)
+        function ipAutoJump(el, nextId) {
+            let v = el.value.replace(/[^0-9]/g, '').slice(0, 3);
+            if (parseInt(v || '0') > 255) v = '255';
+            el.value = v;
+            updateIpPreview(el.id.replace('ip-o1', '').replace('ip-o2', '').replace('ip-o3', '').replace('ip-o4', ''));
+            const firstDigit = parseInt(v[0] || '0');
+            if (v.length >= 3 || (v.length === 2 && firstDigit >= 3)) {
+                const next = document.getElementById(nextId);
+                if (next) next.focus();
+            }
+        }
+
+        // suffix تسمح باستخدام نفس الدالة لأكثر من نسخة من مربعات الإدخال في الصفحة (مثال: '-top')
+        function updateIpPreview(suffix) {
+            suffix = suffix || '';
+            const g = id => document.getElementById(id + suffix)?.value || '';
+            const o1 = g('ip-o1') || '0', o2 = g('ip-o2') || '0', o3 = g('ip-o3') || '0', o4 = g('ip-o4') || '0';
+            const port = g('ip-port') || '8080';
+            const preview = document.getElementById('ip-preview' + suffix);
+            if (preview) preview.textContent = `http://${o1}.${o2}.${o3}.${o4}:${port}/`;
+        }
+
+        function addSavedLink(suffix) {
+            suffix = suffix || '';
+            const g = id => document.getElementById(id + suffix);
+            const o1 = g('ip-o1').value.trim();
+            const o2 = g('ip-o2').value.trim();
+            const o3 = g('ip-o3').value.trim();
+            const o4 = g('ip-o4').value.trim();
+            const port = g('ip-port').value.trim() || '8080';
+            if (!o1 || !o2 || !o3 || !o4) { alert('يرجى إدخال أجزاء الرابط الأربعة كاملة (مثال: 10 . 124 . 196 . 30)'); return; }
+            const url = `http://${o1}.${o2}.${o3}.${o4}:${port}/`;
+            let links = getSavedLinks();
+            if (!links.includes(url)) { links.push(url); saveSavedLinksList(links); }
+            setActiveLink(url);
+            ['ip-o1', 'ip-o2', 'ip-o3', 'ip-o4'].forEach(id => g(id).value = '');
+            g('ip-port').value = '8080';
+            updateIpPreview(suffix);
+            alert('تم حفظ الرابط وتفعيله بنجاح!');
+        }
+
+        function toggleLinkPicker() {
+            const panel = document.getElementById('link-picker-panel');
+            if (!panel) return;
+            const isOpen = panel.style.display === 'block';
+            panel.style.display = isOpen ? 'none' : 'block';
+            if (!isOpen) { renderSavedLinks(); updateIpPreview('-top'); }
+        }
+        // ============ نهاية إدارة الروابط ============
+
+        // ============ نسخة احتياطية حقيقية في تخزين الجهاز (مجانية عبر cordova-plugin-file فقط) ============
+        // هذه الدوال تعمل فقط داخل نسخة APK المثبتة، وتفشل بصمت في أي بيئة أخرى (لا تكسر شيئاً)
+        function isCordovaFileReady() { return !!(window.cordova && window.resolveLocalFileSystemURL && window.cordova.file); }
+
+        function sanitizeFilename(name) {
+            return name.replace(/[\\/:*?"<>|]/g, "_");
+        }
+
+        function getArchiveDir() {
+            return new Promise((resolve, reject) => {
+                if (!isCordovaFileReady()) return reject('no-cordova');
+                window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, dirEntry => {
+                    dirEntry.getDirectory('archive', { create: true }, resolve, reject);
+                }, reject);
+            });
+        }
+
+        // يحفظ نسخة حقيقية من الملف داخل: Android/data/<app>/files/archive
+        // هدفها نسخة احتياطية موجودة فعلياً على الجهاز (تبقى حتى لو حُذف التطبيق أو تلفت قاعدة البيانات الداخلية)
+        // ملاحظة: لا يوجد زر "فتح خارجي" مرتبط بهذه النسخة عمداً، لأن الطريقة المجانية الوحيدة المتاحة لذلك غير مستقرة على أندرويد الحديث
+        async function saveBlobToDevice(filename, blob) {
+            try {
+                const dir = await getArchiveDir();
+                const safeName = sanitizeFilename(filename);
+                return await new Promise((resolve, reject) => {
+                    dir.getFile(safeName, { create: true, exclusive: false }, fileEntry => {
+                        fileEntry.createWriter(writer => {
+                            writer.onwriteend = () => resolve(fileEntry.nativeURL || fileEntry.toURL());
+                            writer.onerror = reject;
+                            writer.write(blob);
+                        }, reject);
+                    }, reject);
+                });
+            } catch (e) {
+                console.warn("تعذر حفظ نسخة احتياطية في تخزين الجهاز (قد يكون التطبيق يعمل خارج APK):", e);
+                return null;
+            }
+        }
+        // ============ نهاية قسم النسخة الاحتياطية ============
+
+        window.addEventListener('message', function(event) {
+            if (!event.data) return;
+            if (event.data.action === 'auto_archive') autoSaveToArchive(event.data.filename, event.data.filetype, event.data.url, event.data.subject);
+            if (event.data.action === 'save_grade') saveExamGrade(event.data.title, event.data.subject, event.data.score, event.data.full_mark);
+        });
+
+                async function autoSaveToArchive(filename, filetype, rawUrl, incomingSubject) {
+            const profile = JSON.parse(localStorage.getItem("app_user_profile") || "{}");
+            let cleanUrl = rawUrl.split('?')[0]; 
+            if(cleanUrl.startsWith('/')) cleanUrl = cleanUrl.substring(1); 
+            let finalFetchUrl = (currentIp.endsWith('/') ? currentIp : currentIp + '/') + cleanUrl;
+
+            let contentToSave = "";
+            let isOfflineReady = false;
+            let isBlobFlag = false; // متغير جديد لتحديد ما إذا كان الملف بيانات صلبة
+            const ext = filename.split('.').pop().toLowerCase();
+            
+            try {
+                const res = await fetch(finalFetchUrl);
+                if(res.ok) {
+                    if (['html', 'htm', 'txt'].includes(ext)) {
+                        // حفظ الملفات النصية ككود
+                        contentToSave = await res.text(); 
+                        isOfflineReady = true;
+                    } else {
+                        // حفظ ملفات الـ PDF والفيديو والصور كبيانات صلبة (Blob)
+                        contentToSave = await res.blob();
+                        isOfflineReady = true;
+                        isBlobFlag = true;
+                    }
+                }
+            } catch(e) {
+                console.error("فشل في تحميل الملف:", e);
+            }
+
+            const existing = await dbGetAll('archive');
+            if(existing.find(i => i.title === filename)) return;
+
+            let finalSubject = incomingSubject || profile.subject || "مواد عامة";
+
+            // حفظ نسخة احتياطية حقيقية في تخزين الجهاز بالتوازي (لا تعطّل شيئاً لو فشلت)
+            let localPath = null;
+            if (isBlobFlag && contentToSave instanceof Blob) {
+                localPath = await saveBlobToDevice(filename, contentToSave);
+            }
+
+            // إضافة البيانات وتحديث isBlob
+            const newItem = { 
+                id: Date.now(), 
+                title: filename, 
+                subject: finalSubject, 
+                type: filetype, 
+                ext: ext, 
+                url: finalFetchUrl, 
+                content: contentToSave, 
+                isOffline: isOfflineReady, 
+                isBlob: isBlobFlag, // الاعتماد على المتغير الجديد
+                localPath: localPath,
+                isRead: false, 
+                date: new Date().toLocaleDateString('ar-EG') 
+            };
+            
+            await dbPut('archive', newItem);
+            alert(`تم حفظ "${filename}" في الأرشيف ليعمل بدون إنترنت`);
+            renderArchive();
+        }
+
+        async function importLocalFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (file.size > 25 * 1024 * 1024) { 
+                alert("عفواً، لا يمكن استيراد ملفات يزيد حجمها عن 25 ميجابايت.");
+                event.target.value = '';
+                return;
+            }
+
+            const profile = JSON.parse(localStorage.getItem("app_user_profile") || "{}");
+            let subject = prompt("إلى أي مادة تريد إضافة هذا الملف؟\n(مثال: أحياء، كيمياء...)", profile.subject || "مواد عامة");
+            if (subject === null) { event.target.value = ''; return; }
+            if (subject.trim() === "") subject = "مواد عامة";
+
+            const filename = file.name;
+            const ext = filename.split('.').pop().toLowerCase();
+
+            const existing = await dbGetAll('archive');
+            if(existing.find(i => i.title === filename)) {
+                alert("يوجد ملف بهذا الاسم مسبقاً في الأرشيف!");
+                event.target.value = '';
+                return;
+            }
+
+            const isText = ['html', 'htm', 'txt'].includes(ext);
+            let contentToStore = isText ? await file.text() : file;
+            let isBlobFlag = !isText;
+
+            // حفظ نسخة احتياطية حقيقية في تخزين الجهاز بالتوازي (لا تعطّل شيئاً لو فشلت)
+            let localPath = null;
+            if (isBlobFlag) {
+                localPath = await saveBlobToDevice(filename, file);
+            }
+
+            const newItem = { 
+                id: Date.now(), 
+                title: filename, 
+                subject: subject.trim(), 
+                type: "ملف مستورد", 
+                ext: ext, 
+                url: "", 
+                content: contentToStore, 
+                isOffline: true,
+                isBlob: isBlobFlag,
+                localPath: localPath,
+                isRead: false, 
+                date: new Date().toLocaleDateString('ar-EG') 
+            };
+
+            await dbPut('archive', newItem);
+            alert(`تم إضافة "${filename}" إلى أرشيف ${subject.trim()} بنجاح!`);
+            renderArchive();
+            event.target.value = '';
+        }
+
+        async function renderArchive() {
+            const archive = await dbGetAll('archive');
+            const container = document.getElementById("archive-list");
+            const filterVal = document.getElementById("archive-filter").value;
+
+            let filteredArchive = archive;
+            if (filterVal !== 'all') {
+                filteredArchive = archive.filter(item => item.subject === filterVal || item.subject.includes(filterVal));
+            }
+
+            if (filteredArchive.length === 0) { 
+                container.innerHTML = '<p style="text-align:center; color:#6b7280; padding:20px;">لا توجد ملفات في هذا القسم.</p>'; 
+                return; 
+            }
+
+            const grouped = {};
+            filteredArchive.forEach(item => { if(!grouped[item.subject]) grouped[item.subject] = []; grouped[item.subject].push(item); });
+
+            let html = "";
+            for (const [sub, items] of Object.entries(grouped)) {
+                const progressPct = Math.round((items.filter(i => i.isRead).length / items.length) * 100);
+                html += `<div class="subject-group"><div class="subject-title"><span>📘 ${sub}</span> <span>${progressPct}%</span></div><div class="progress-bar"><div class="progress-fill" style="width: ${progressPct}%"></div></div>`;
+                items.forEach(item => {
+                    const icon = ['mp4','webm'].includes(item.ext) ? '🎬' : ['mp3','wav'].includes(item.ext) ? '🎵' : ['jpg','png','jpeg'].includes(item.ext) ? '🖼️' : ['pdf'].includes(item.ext) ? '📕' : '🌐';
+                    html += `
+                    <div class="item-row ${item.isRead ? "read" : ""}">
+                        <span class="item-title">${icon} ${item.title}</span>
+                        <span class="item-meta">${item.type} | ${item.date}</span>
+                        <div style="display:flex; gap:8px;">
+                            <button class="btn-small" style="background:#dbeafe; color:#1e40af; flex:1;" onclick="openUnifiedPlayer(${item.id})">▶️ فتح</button>
+                            <button class="btn-small" style="background:#f3f4f6; color:#4b5563; border:1px solid #ddd;" onclick="toggleRead(${item.id})">${item.isRead ? "✔️" : "⭕"}</button>
+                            <button class="btn-small" style="background:#fee2e2; color:#dc2626;" onclick="delArchive(${item.id})">🗑️</button>
+                        </div>
+                    </div>`;
+                });
+                html += `</div>`;
+            }
+            container.innerHTML = html;
+        }
+
+        async function toggleRead(id) {
+            const archive = await dbGetAll('archive');
+            let item = archive.find(i => i.id === id);
+            if(item) { item.isRead = !item.isRead; await dbPut('archive', item); renderArchive(); }
+        }
+
+        async function delArchive(id) {
+            if(!confirm("حذف من الأرشيف؟")) return;
+            const archive = await dbGetAll('archive');
+            const item = archive.find(i => i.id === id);
+            if (item && item.localPath && isCordovaFileReady()) {
+                window.resolveLocalFileSystemURL(item.localPath, entry => entry.remove(() => {}, () => {}), () => {});
+            }
+            await dbDelete('archive', id);
+            renderArchive();
+        }
+
+                async function openUnifiedPlayer(id) {
+            const archive = await dbGetAll('archive');
+            const item = archive.find(i => i.id === id);
+            if(!item) return;
+
+            document.getElementById("player-title").textContent = item.title;
+            const body = document.getElementById("player-body");
+            const pdfFallback = document.getElementById("pdf-fallback-btn");
+            
+            body.innerHTML = "";
+            body.style.background = "#fff";
+            pdfFallback.style.display = "none";
+            currentZoomCtrl = null;
+
+            const ext = item.ext;
+            let mediaSrc = item.url;
+
+            // استخراج بطاقات المراجعة تلقائياً أول مرة يُفتح فيها ملف اختبار HTML (لا يعطّل العرض، يعمل في الخلفية)
+            if (['html', 'htm'].includes(ext) && item.isOffline && !item.isBlob) {
+                autoExtractCardsIfNeeded(item);
+            }
+
+            // تحويل الملف المحلي المحفوظ إلى رابط مقروء داخلياً
+            if (item.isBlob && item.content instanceof Blob) {
+                currentBlobUrl = URL.createObjectURL(item.content);
+                mediaSrc = currentBlobUrl;
+            }
+
+            if (['mp4', 'webm', 'mov'].includes(ext)) {
+                body.style.background = "#000";
+                body.innerHTML = `<video controls autoplay style="width:100%; max-height:100%;"><source src="${mediaSrc}"></video>`;
+            } 
+            else if (['mp3', 'wav', 'm4a'].includes(ext)) {
+                body.innerHTML = `<div style="text-align:center; padding:20px;"><div style="font-size:50px; margin-bottom:20px;">🎵</div><audio controls autoplay style="width:90%;"><source src="${mediaSrc}"></audio></div>`;
+            } 
+            else if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext)) {
+                body.style.background = "#000";
+                body.innerHTML = `
+                    <div class="zoom-viewport" id="zoom-viewport">
+                        <img id="zoom-image" src="${mediaSrc}">
+                    </div>
+                    <div class="zoom-hint-badge" id="zoom-hint-badge">اقرص للتكبير أو انقر نقرتين متتاليتين</div>
+                    <div class="zoom-controls">
+                        <button onclick="if(currentZoomCtrl) currentZoomCtrl.zoomOut()">−</button>
+                        <button onclick="if(currentZoomCtrl) currentZoomCtrl.reset()" style="font-size:14px;">⤾</button>
+                        <button onclick="if(currentZoomCtrl) currentZoomCtrl.zoomIn()">+</button>
+                    </div>`;
+                const zImg = document.getElementById('zoom-image');
+                const zViewport = document.getElementById('zoom-viewport');
+                const initZoom = () => {
+                    currentZoomCtrl = createZoomPan(zViewport, zImg, { maxScale: 6, doubleTapScale: 2.5 });
+                    const hint = document.getElementById('zoom-hint-badge');
+                    if (hint) { hint.style.opacity = '1'; setTimeout(() => { hint.style.opacity = '0'; }, 2200); }
+                };
+                if (zImg.complete && zImg.naturalWidth) initZoom(); else zImg.onload = initZoom;
+            } 
+            else if (['pdf'].includes(ext)) {
+                // التوجيه الذكي: إنشاء إطار يعرض قارئ الـ PDF المدمج ويمرر له مسار الملف المحلي
+                const iframe = document.createElement('iframe');
+                iframe.style.cssText = "width:100%; height:100%; border:none; background:#eef2f9;";
+                // توجيه المسار إلى القارئ الداخلي الموجود في مجلد www
+                iframe.src = "pdf-reader.html?file=" + encodeURIComponent(mediaSrc);
+                body.appendChild(iframe);
+            }
+            else {
+                const iframe = document.createElement('iframe');
+                iframe.style.cssText = "width:100%; height:100%; border:none;";
+                if (item.isOffline && !item.isBlob && item.content) { 
+                    iframe.srcdoc = item.content; 
+                } else { 
+                    iframe.src = mediaSrc; 
+                }
+                body.appendChild(iframe);
+
+                // زر يدوي لاستخراج/إعادة استخراج بطاقات المراجعة (مفيد للتشخيص وإعادة المحاولة)
+                if (['html', 'htm'].includes(ext) && item.isOffline && !item.isBlob) {
+                    const extractBtn = document.createElement('button');
+                    extractBtn.textContent = '🔖 استخراج بطاقات مراجعة';
+                    extractBtn.style.cssText = "position:absolute; bottom:16px; left:50%; transform:translateX(-50%); background:#7c3aed; color:#fff; border:none; padding:10px 18px; border-radius:20px; font-size:13px; font-weight:bold; box-shadow:0 4px 10px rgba(0,0,0,0.3); z-index:30; cursor:pointer;";
+                    extractBtn.onclick = () => autoExtractCardsIfNeeded(item, true);
+                    body.appendChild(extractBtn);
+                }
+            }
+
+            document.getElementById("unified-player").style.display = "flex";
+            if(!item.isRead) toggleRead(id);
+        }
+
+        function closePlayer() {
+            document.getElementById("unified-player").style.display = "none";
+            document.getElementById("player-body").innerHTML = "";
+            if (currentBlobUrl) { URL.revokeObjectURL(currentBlobUrl); currentBlobUrl = null; }
+            currentZoomCtrl = null;
+        }
+
+        async function addGradeManual() {
+            const title = document.getElementById("gr-title").value.trim();
+            const subject = document.getElementById("gr-subject").value.trim() || "عام";
+            const score = document.getElementById("gr-score").value;
+            const total = document.getElementById("gr-total").value;
+            if(!title || !score || !total) { alert("أكمل البيانات"); return; }
+            await saveExamGrade(title, subject, score, total);
+            document.getElementById("gr-title").value = ""; document.getElementById("gr-score").value = ""; document.getElementById("gr-total").value = "";
+        }
+
+        async function saveExamGrade(title, subject, score, total) {
+            const newGrade = { id: Date.now(), title, subject, score, total, date: new Date().toLocaleDateString('ar-EG') };
+            await dbPut('grades', newGrade);
+            alert("تم الحفظ 🏅");
+            renderGrades();
+        }
+
+        async function renderGrades() {
+            const grades = await dbGetAll('grades');
+            const container = document.getElementById("grades-list");
+            if (grades.length === 0) { container.innerHTML = '<p style="text-align:center; color:#6b7280; padding:20px;">لا توجد اختبارات.</p>'; return; }
+
+            grades.sort((a, b) => b.id - a.id);
+            let html = "";
+            grades.forEach(g => {
+                const pct = Math.round((g.score / g.total) * 100);
+                const color = pct >= 90 ? "#16a34a" : pct >= 75 ? "#2563eb" : pct >= 50 ? "#d97706" : "#dc2626";
+                html += `
+                <div class="item-row">
+                    <span class="grade-badge" style="background:${color};">${g.score} / ${g.total}</span>
+                    <div style="margin-right: 70px;">
+                        <span class="item-title">${g.title}</span>
+                        <span class="item-meta">${g.subject} | ${g.date}</span>
+                    </div>
+                    <button class="btn-small" style="background:#fee2e2; color:#dc2626; width:100%; margin-top:10px;" onclick="delGrade(${g.id})">حذف السجل</button>
+                </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        async function delGrade(id) {
+            if(confirm("حذف؟")) { await dbDelete('grades', id); renderGrades(); }
+        }
+
+        const days = ["السبت", "الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس"];
+        function renderSchedule() {
+            const tbody = document.getElementById("scheduleBody");
+            const savedSchedule = JSON.parse(localStorage.getItem("app_schedule") || "{}");
+            let html = "";
+            days.forEach((day, dIdx) => {
+                html += `<tr><td class="day-name">${day}</td>`;
+                for(let i=1; i<=6; i++) {
+                    const val = savedSchedule[`${dIdx}-${i}`] || "";
+                    html += `<td><input type="text" id="sch-${dIdx}-${i}" value="${val}"></td>`;
+                }
+                html += `</tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+
+        function saveSchedule() {
+            const schedule = {};
+            days.forEach((day, dIdx) => {
+                for(let i=1; i<=6; i++) schedule[`${dIdx}-${i}`] = document.getElementById(`sch-${dIdx}-${i}`).value.trim();
+            });
+            localStorage.setItem("app_schedule", JSON.stringify(schedule));
+            alert("تم الحفظ 🗓️");
+        }
+
+        async function exportBackup() {
+            const archive = await dbGetAll('archive');
+            const safeArchive = archive.map(item => {
+                if (item.isBlob) { return { ...item, content: null, warning: "الملف المحلي غير مضمن في النسخة" }; }
+                return item;
+            });
+            const grades = await dbGetAll('grades');
+            const data = { profile: JSON.parse(localStorage.getItem("app_user_profile")||"{}"), archive: safeArchive, grades, schedule: JSON.parse(localStorage.getItem("app_schedule")||"{}"), ip: currentIp };
+            const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
+            const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `AlHail_FullBackup.json`; a.click();
+        }
+
+        function importBackup(e) {
+            const r = new FileReader();
+            r.onload = async function(ev) { 
+                try { 
+                    const data = JSON.parse(ev.target.result); 
+                    if(data.profile) localStorage.setItem("app_user_profile", JSON.stringify(data.profile)); 
+                    if(data.schedule) localStorage.setItem("app_schedule", JSON.stringify(data.schedule)); 
+                    if(data.ip) localStorage.setItem("app_server_ip", data.ip); 
+                    if(data.archive) { for(let item of data.archive) await dbPut('archive', item); }
+                    if(data.grades) { for(let item of data.grades) await dbPut('grades', item); }
+                    alert("تم الاستعادة بنجاح!"); location.reload(); 
+                } catch(err) { alert("ملف غير صالح"); } 
+            };
+            if(e.target.files[0]) r.readAsText(e.target.files[0]);
+        }
+
+        // ============================================================
+        // نظام "مراجعتي": استخراج بطاقات تلقائياً + جدولة Leitner
+        // ============================================================
+
+        // يمر على ملف HTML (اختبار) ويستخرج أسئلة الاختيار من متعدد/الصح والخطأ وأكمل الفراغ
+        // يعتمد على البنية الثابتة التي تستخدمها دائماً: mcq-card / cloze-card
+        function extractCardsFromHtml(htmlString) {
+            const doc = new DOMParser().parseFromString(htmlString, 'text/html');
+            const cards = [];
+
+            doc.querySelectorAll('.mcq-card').forEach(card => {
+                const qEl = card.querySelector('.mcq-q');
+                const answerIdx = card.getAttribute('data-answer');
+                const correctOpt = card.querySelector(`.mcq-opt[data-idx="${answerIdx}"]`);
+                const expEl = card.querySelector('.mcq-exp');
+                if (qEl && correctOpt) {
+                    cards.push({
+                        question: qEl.textContent.trim(),
+                        answer: correctOpt.textContent.trim(),
+                        explanation: expEl ? expEl.textContent.trim() : ""
+                    });
+                }
+            });
+
+            doc.querySelectorAll('.cloze-card').forEach(card => {
+                const qEl = card.querySelector('.cloze-q');
+                const aEl = card.querySelector('.cloze-ans');
+                if (qEl && aEl) {
+                    cards.push({
+                        question: qEl.textContent.trim(),
+                        answer: aEl.textContent.trim(),
+                        explanation: ""
+                    });
+                }
+            });
+
+            return cards;
+        }
+
+        // يُستدعى تلقائياً أول مرة يفتح الطالب ملف اختبار HTML — يستخرج البطاقات ويحفظها، ولا يكررها لاحقاً
+        // force=true تُستخدم مع الزر اليدوي لإعادة المحاولة وإظهار رسالة توضح النتيجة أو الخطأ
+        async function autoExtractCardsIfNeeded(item, force) {
+            if ((item.cardsExtracted && !force) || !item.isOffline || item.isBlob || typeof item.content !== 'string') {
+                if (force) alert('هذا الملف لا يصلح للاستخراج (تأكد أنه ملف HTML محفوظ في الأرشيف بدون إنترنت).');
+                return;
+            }
+            try {
+                const extracted = extractCardsFromHtml(item.content);
+                if (extracted.length === 0) {
+                    item.cardsExtracted = true;
+                    await dbPut('archive', item);
+                    if (force) alert('لم يتم العثور على أي أسئلة بالصيغة المعروفة (mcq-card / cloze-card) داخل هذا الملف.');
+                    return;
+                }
+                const now = Date.now();
+                for (const c of extracted) {
+                    await dbPut('flashcards', {
+                        id: now + Math.floor(Math.random() * 100000),
+                        question: c.question,
+                        answer: c.answer,
+                        explanation: c.explanation,
+                        subject: item.subject,
+                        sourceFile: item.title,
+                        box: 1,
+                        nextReviewDate: todayStr(),
+                        createdDate: new Date().toLocaleDateString('ar-EG')
+                    });
+                }
+                item.cardsExtracted = true;
+                await dbPut('archive', item);
+                renderHomeBadge();
+                if (force) alert(`تم استخراج ${extracted.length} بطاقة مراجعة بنجاح! ✅`);
+            } catch (err) {
+                console.error('extract error', err);
+                alert('⚠️ حدث خطأ أثناء استخراج البطاقات:\n' + (err && err.message ? err.message : String(err)));
+            }
+        }
+
+        function todayStr(offsetDays) {
+            const d = new Date();
+            d.setDate(d.getDate() + (offsetDays || 0));
+            return d.toISOString().split('T')[0];
+        }
+
+        // جدول فترات Leitner: كل صندوق له عدد أيام حتى المراجعة التالية
+        const LEITNER_INTERVALS = { 1: 1, 2: 3, 3: 7, 4: 14, 5: 30 };
+
+        async function getDueFlashcards() {
+            const all = await dbGetAll('flashcards');
+            const today = todayStr();
+            return all.filter(c => c.nextReviewDate <= today);
+        }
+
+        async function renderHomeBadge() {
+            const due = await getDueFlashcards();
+            const badge = document.getElementById('review-badge');
+            if (!badge) return;
+            if (due.length > 0) { badge.textContent = due.length; badge.style.display = 'flex'; }
+            else badge.style.display = 'none';
+        }
+
+        let reviewQueue = [];
+        let reviewIndex = 0;
+
+        async function openReviewScreen() {
+            reviewQueue = await getDueFlashcards();
+            // فرز حسب المادة أولاً حتى تُراجع كل مادة دفعة واحدة بدل التنقل العشوائي بينها
+            reviewQueue.sort((a, b) => (a.subject || '').localeCompare(b.subject || '', 'ar'));
+            reviewIndex = 0;
+            renderReviewCard();
+        }
+
+        function renderReviewCard() {
+            const box = document.getElementById('review-card-box');
+            const emptyMsg = document.getElementById('review-empty');
+            const progressWrap = document.getElementById('review-progress-wrap');
+            const progressText = document.getElementById('review-progress-text');
+            const progressPct = document.getElementById('review-progress-pct');
+            const progressBar = document.getElementById('review-progress-bar');
+
+            if (reviewQueue.length === 0) {
+                box.style.display = 'none';
+                emptyMsg.style.display = 'block';
+                document.querySelector('#review-empty h2').textContent = 'لا توجد بطاقات مستحقة الآن';
+                progressWrap.style.display = 'none';
+                renderHomeBadge();
+                return;
+            }
+
+            const donePct = Math.round((reviewIndex / reviewQueue.length) * 100);
+            progressWrap.style.display = 'block';
+            progressText.textContent = `تمت مراجعة ${reviewIndex} من ${reviewQueue.length}`;
+            progressPct.textContent = `${donePct}%`;
+            progressBar.style.width = donePct + '%';
+
+            if (reviewIndex >= reviewQueue.length) {
+                box.style.display = 'none';
+                emptyMsg.style.display = 'block';
+                document.querySelector('#review-empty h2').textContent = 'أحسنت! أنهيت مراجعة اليوم 🎉';
+                renderHomeBadge();
+                return;
+            }
+            box.style.display = 'block';
+            emptyMsg.style.display = 'none';
+            const card = reviewQueue[reviewIndex];
+            document.getElementById('review-subject').textContent = card.subject || '';
+            document.getElementById('review-question').textContent = card.question;
+            document.getElementById('review-answer-wrap').style.display = 'none';
+            document.getElementById('review-answer').textContent = card.answer;
+            document.getElementById('review-explanation').textContent = card.explanation || '';
+            document.getElementById('review-explanation').style.display = card.explanation ? 'block' : 'none';
+            document.getElementById('reveal-btn').style.display = 'block';
+            document.getElementById('review-rate-buttons').style.display = 'none';
+        }
+
+        function revealAnswer() {
+            document.getElementById('review-answer-wrap').style.display = 'block';
+            document.getElementById('reveal-btn').style.display = 'none';
+            document.getElementById('review-rate-buttons').style.display = 'flex';
+        }
+
+        async function rateCard(knewIt) {
+            const card = reviewQueue[reviewIndex];
+            if (knewIt) {
+                card.box = Math.min(5, card.box + 1);
+            } else {
+                card.box = 1;
+            }
+            card.nextReviewDate = todayStr(LEITNER_INTERVALS[card.box]);
+            await dbPut('flashcards', card);
+            reviewIndex++;
+            renderReviewCard();
+        }
+
+        async function renderFlashcardsManager() {
+            const all = await dbGetAll('flashcards');
+            const container = document.getElementById('flashcards-manager-list');
+            const statsCard = document.getElementById('flashcards-stats-card');
+            document.getElementById('flashcards-total-count').textContent = all.length;
+
+            if (all.length === 0) {
+                statsCard.style.display = 'none';
+                container.innerHTML = '<p style="text-align:center; color:#6b7280; padding:15px;">لا توجد بطاقات بعد. افتح أحد ملفات الاختبارات في الأرشيف لاستخراجها تلقائياً.</p>';
+                return;
+            }
+
+            // نسبة الإتقان: البطاقات التي وصلت للصندوق 5 (آخر مرحلة) تُحسب "متقنة"
+            const mastered = all.filter(c => c.box >= 5).length;
+            const masteryPct = Math.round((mastered / all.length) * 100);
+            document.getElementById('mastery-pct-text').textContent = `${mastered} من ${all.length} (${masteryPct}%)`;
+            document.getElementById('mastery-progress-bar').style.width = masteryPct + '%';
+            statsCard.style.display = 'block';
+
+            // فرز حسب المادة مع عرض عنوان لكل مجموعة مادة
+            all.sort((a, b) => (a.subject || '').localeCompare(b.subject || '', 'ar'));
+            let html = '';
+            let lastSubject = null;
+            all.forEach(c => {
+                const subj = c.subject || 'مواد عامة';
+                if (subj !== lastSubject) {
+                    html += `<h3 style="font-size:14px; color:var(--secondary); margin:16px 0 8px; border-bottom:2px solid #eef2f9; padding-bottom:5px;">📂 ${subj}</h3>`;
+                    lastSubject = subj;
+                }
+                html += `<div class="item-row">
+                    <span class="item-title">${c.question}</span>
+                    <span class="item-meta">صندوق ${c.box} | التالي: ${c.nextReviewDate}</span>
+                    <button class="btn-small" style="background:#fee2e2; color:#dc2626; width:100%;" onclick="delFlashcard(${c.id})">🗑️ حذف البطاقة</button>
+                </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        async function delFlashcard(id) {
+            if (confirm('حذف هذه البطاقة؟')) { await dbDelete('flashcards', id); renderFlashcardsManager(); renderHomeBadge(); }
+        }
+
+        async function deleteAllFlashcards() {
+            const all = await dbGetAll('flashcards');
+            if (all.length === 0) return;
+            if (!confirm(`هل أنت متأكد من حذف كل البطاقات (${all.length} بطاقة)؟ لا يمكن التراجع عن هذا.`)) return;
+            for (const c of all) await dbDelete('flashcards', c.id);
+            renderFlashcardsManager();
+            renderHomeBadge();
+        }
+    </script>
+</body>
+
+<!-- Mirrored from https://teacheraihayel.netlify.app/platform.html by HTTrack Website Copier/3.x [XR&CO], Sun, 04 Oct 2026 16:15:28 GMT -->
+</html>
+
