@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<!-- Mirrored from https://teacheraihayel.netlify.app/grades.html by HTTrack Website Copier/3.x [XR&CO], Sun, 04 Oct 2026 16:15:04 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+  <meta charset="UTF-8" />
+<!-- This site is hosted on Netlify. Anyone can build and deploy a site
+     like this one for free: https://netlify.new/?utm_campaign=loops&utm_source=ai-legible&utm_medium=owned&utm_content=comment&utm_id=44cc1212-9d5f-474b-941a-73b7d8d02c3e
+     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>دفتر درجات الطلاب والحضور والغياب - الأستاذ هايل</title>
+  <link rel="stylesheet" href="grades_style.css" />
+  <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#3B1E63">
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js')
+        .then(reg => console.log('تم تفعيل ميزة العمل بدون إنترنت بنجاح!', reg))
+        .catch(err => console.error('فشل تفعيل ميزة الأوفلاين:', err));
+    });
+  }
+</script>
+</head>
+<body>
+
+  <div class="header-right">
+    <button class="nav-btn" style="background:#B71C1C;" onclick="window.location.href='index-2.html'">🔙 الهائل</button>
+    <button id="btn-home" class="nav-btn hidden" onclick="showScreen('home')">🏠 الرئيسية</button>
+    <div id="header-title">دفتر المعلم الإلكتروني</div>
+  </div>
+
+  <div class="header-left">
+    <div id="save-indicator" class="hidden">✓ تم الحفظ</div>
+    <span class="teacher-badge">الأستاذ هايل</span>
+  </div>
+</header>
+
+<main class="app-container">
+
+  <section id="screen-home" class="screen active">
+    <div class="welcome-banner">
+      <h2 id="view-school-name">مدرسة حمير النموذجية</h2>
+      <p id="view-school-meta">نظام رصد الدرجات ومتابعة الحضور والغياب اليومي</p>
+    </div>
+    
+    <div class="main-dashboard-grid">
+      <button class="dash-btn btn-purple-dark" onclick="showScreen('basic-info')">
+        <span class="dash-icon">⚙️</span>
+        <span class="dash-text">البيانات الأساسية</span>
+        <small class="dash-desc">اسم المدرسة، الأستاذ، العام، والفصل</small>
+      </button>
+
+      <button class="dash-btn btn-purple-medium" onclick="showScreen('add-class')">
+        <span class="dash-icon">➕</span>
+        <span class="dash-text">إضافة الفصول</span>
+        <small class="dash-desc">إدارة الصفوف وكشوفات الأسماء واستيراد إكسل</small>
+      </button>
+
+      <button class="dash-btn btn-purple-light" onclick="showScreen('grades-sheet'); loadGradesSheet();">
+        <span class="dash-icon">📝</span>
+        <span class="dash-text">دفتر الدرجات</span>
+        <small class="dash-desc">اختيار الصف، المادة، الشهر، وتصدير التقارير</small>
+      </button>
+
+      <button class="dash-btn btn-purple-accent" onclick="showScreen('attendance-sheet'); loadAttendanceSheet();">
+        <span class="dash-icon">📅</span>
+        <span class="dash-text">دفتر الحضور والغياب</span>
+        <small class="dash-desc">الرصد اليومي السريع واحتساب المواظبة الشهري</small>
+      </button>
+    </div>
+  </section>
+
+  <section id="screen-basic-info" class="screen">
+    <div class="card">
+      <h3 class="card-title">⚙️ الإعدادات العامة للمدرسة والملف</h3>
+      <div class="form-group">
+        <label>اسم المدرسة</label>
+        <input type="text" id="input-school" placeholder="مثال: مدرسة حمير النموذجية" />
+      </div>
+      <div class="form-group">
+        <label>اسم الأستاذ</label>
+        <input type="text" id="input-teacher" placeholder="مثال: الأستاذ هايل سعيد" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>العام الدراسي</label>
+          <input type="text" id="input-year" placeholder="2026-2027" />
+        </div>
+        <div class="form-group">
+          <label>الفصل الدراسي</label>
+          <select id="select-semester">
+            <option value="الأول">الفصل الأول</option>
+            <option value="الثاني">الفصل الثاني</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn-action full-width" onclick="saveBasicInfo()">💾 حفظ الإعدادات الأساسية</button>
+    </div>
+        <div class="card" style="margin-top: 15px;">
+      <h3 class="card-title">💾 النسخ الاحتياطي للبيانات</h3>
+      <p style="font-size: 14px; margin-bottom: 12px; color: var(--text-muted); font-weight: bold;">
+        احفظ نسخة من بياناتك (صفوف، طلاب، درجات، حضور) لتأمينها أو نقلها لهاتف آخر.
+      </p>
+      <div class="form-row">
+        <button class="btn-action" style="background-color: var(--info); font-size: 14px;" onclick="exportBackup()">
+          📥 تنزيل نسخة (JSON)
+        </button>
+        <button class="btn-action" style="background-color: var(--warning); color: #fff; font-size: 14px;" onclick="document.getElementById('import-backup-file').click()">
+          📤 استعادة نسخة
+        </button>
+        <input type="file" id="import-backup-file" accept=".json" style="display:none" onchange="importBackup(event)" />
+      </div>
+    </div>
+  </section>
+
+  <section id="screen-add-class" class="screen">
+    <div class="card compact-card">
+      <h3 class="card-title">🏫 إنشاء صف دراسي جديد</h3>
+      <div class="form-group">
+        <label>اسم الصف الدراسي</label>
+        <div class="student-add-inline">
+          <input type="text" id="class-name" placeholder="مثال: الثالث الثانوي (أ)" />
+          <button class="btn-action btn-compact" onclick="createNewClass()">🏫 إنشاء الصف</button>
+        </div>
+      </div>
+    </div>
+
+   <div class="card id-management-box hidden" id="students-manage-card">
+      <div class="card-header-flex">
+        <h3 class="card-title">👨‍🎓 أسماء طلاب: <span id="current-manage-class-title"></span></h3>
+        <div class="header-actions">
+          <button class="btn-sm btn-excel" onclick="triggerExcelImport()">📥 استيراد من Excel (.xlsx)</button>
+          <input type="file" id="excel-file-input" accept=".xlsx, .xls" style="display:none" onchange="handleExcelImport(event)" />
+        </div>
+      </div>
+
+      <div class="student-add-inline">
+        <input type="text" id="new-student-name" placeholder="اكتب اسم الطالب الكامل..." />
+        <button class="btn-action btn-compact" onclick="addStudentManual()">➕ إضافة طالب</button>
+      </div>
+
+      <!-- 💡 أدوات الترقيم الآلي لأرقام الجلوس -->
+      <div class="student-add-inline" style="margin-top: 15px; background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0;">
+        <input type="number" id="start-seat-number" placeholder="رقم البداية (مثال: 101)" style="max-width: 200px;" />
+        <button class="btn-action btn-compact" style="background-color: #0ea5e9;" onclick="autoGenerateSeatNumbers()">🔢 ترقيم جلوس آلي للصف</button>
+      </div>
+
+      <div class="table-scroll" style="margin-top: 15px;">
+        <table class="app-table table-compact">
+          <thead>
+            <tr>
+              <th style="width: 40px;">م</th>
+              <th style="width: 100px;">رقم الجلوس</th> <!-- 💡 عمود رقم الجلوس -->
+              <th>اسم الطالب</th>
+              <th style="width: 80px;">إجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="students-manage-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card compact-card">
+      <h3 class="card-title">📋 الصفوف الدراسية المتاحة</h3>
+      <div id="classes-list-container" class="classes-buttons-list"></div>
+    </div>
+  </section>
+
+  <section id="screen-grades-sheet" class="screen">
+    
+    <div id="grades-toolbar" class="floating-toolbar compact-toolbar no-print">
+      
+      <div class="filter-row">
+        <div class="compact-filter-item">
+          <label class="field-label-xs">الصف الدراسـي</label>
+          <select id="grades-filter-class" onchange="loadGradesSheet()"></select>
+        </div>
+        
+        <div class="compact-filter-item">
+          <label class="field-label-xs">المادة الدراسيـة</label>
+          <select id="grades-filter-subject" onchange="handleSubjectChange('grades')">
+
+<option value="قرآن كريم">قرآن كريم</option>
+<option value="تربية إسلامية">تربية إسلامية</option>
+<option value="لغة عربية">لغة عربية</option>
+ <option value="لغة إنجليزية">لغة إنجليزية</option>
+<option value="رياضيات">رياضيات</option>
+<option value="فيزياء">فيزياء</option>
+<option value="كيمياء">كيمياء</option>
+<option value="أحياء">أحياء</option>
+<option value="تاريخ">تاريخ</option>
+<option value="جغرافيا">جغرافيا</option>
+<option value="اجتماعيات">اجتماعيات</option>
+<option value="وطنية">وطنية</option>
+<option value="حاسوب">حاسوب</option>
+<option value="custom">✍️ إدخال مادة يدوية...</option>
+          </select>
+          <input type="text" id="grades-custom-subject" class="hidden compact-custom-input" placeholder="اكتب اسم المادة..." oninput="loadGradesSheet()" />
+        </div>
+        
+                <div class="compact-filter-item">
+          <label class="field-label-xs">الشهــر</label>
+          <select id="grades-filter-month" onchange="loadGradesSheet()">
+            <optgroup label="الأشهر الميلادية">
+              <option value="يناير">يناير</option>
+              <option value="فبراير">فبراير</option>
+              <option value="مارس">مارس</option>
+              <option value="أبريل">أبريل</option>
+              <option value="مايو">مايو</option>
+              <option value="يونيو">يونيو</option>
+              <option value="يوليو">يوليو</option>
+              <option value="أغسطس">أغسطس</option>
+              <option value="سبتمبر" selected>سبتمبر</option>
+              <option value="أكتوبر">أكتوبر</option>
+              <option value="نوفمبر">نوفمبر</option>
+              <option value="ديسمبر">ديسمبر</option>
+            </optgroup>
+            <optgroup label="الأشهر الهجرية">
+              <option value="محرم">محرم</option>
+              <option value="صفر">صفر</option>
+              <option value="ربيع الأول">ربيع الأول</option>
+              <option value="ربيع الآخر">ربيع الآخر</option>
+              <option value="جمادى الأولى">جمادى الأولى</option>
+              <option value="جمادى الآخرة">جمادى الآخرة</option>
+              <option value="رجب">رجب</option>
+              <option value="شعبان">شعبان</option>
+              <option value="رمضان">رمضان</option>
+              <option value="شوال">شوال</option>
+              <option value="ذو القعدة">ذو القعدة</option>
+              <option value="ذو الحجة">ذو الحجة</option>
+            </optgroup>
+          </select>
+        </div>
+
+                 <!-- 💡 القائمة المنسدلة الذكية لإجراءات الدرجات -->
+      <div class="action-row-grid" style="margin-top: 15px; display: flex; justify-content: center; align-items: center;">
+        <select id="gradesActionSelect" onchange="executeGradesAction(this)" style="padding: 12px; border-radius: 8px; border: 2px solid #5A2E99; font-family: 'Cairo', sans-serif; font-size: 15px; font-weight: bold; color: #3B1E63; background: #F3E8FF; cursor: pointer; width: 100%; max-width: 400px; outline: none; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+          <option value="">⚙️ اختر إجراء أو تقرير...</option>
+          <optgroup label="📥 سحب البيانات">
+              <option value="import_exams">📥 سحب درجات الاختبار الإلكتروني</option>
+              <option value="import_hw">🏠 سحب درجات الواجبات المنزلية</option>
+          </optgroup>
+          <optgroup label="📊 التقارير والتحليل">
+              <option value="report_summary">📊 خلاصة تقرير درجات الفصل</option>
+              <option value="monthly_analysis">📈 تحليل النتائج الشهرية للتطور</option>
+              <option value="group_results">🏆 كشف النتائج المزخرف (جماعي)</option>
+          </optgroup>
+          <optgroup label="🖨️ التصدير والطباعة">
+              <option value="image">📸 تصدير كشف الدرجات كصورة</option>
+              <option value="pdf_month">📄 كشف درجات الشهر (PDF)</option>
+              <option value="pdf_students">🖨️ نتيجة كل طالب PDF (بطاقات مستقلة)</option>
+              <option value="pdf_all">🖨️ تصدير دفتر الدرجات كامل (PDF)</option>
+              <option value="excel">📤 تصدير إكسل (.xlsx)</option>
+          </optgroup>
+        </select>
+      </div>
+      
+       </div>
+
+
+    <div class="card id-report-summary hidden" id="grades-report-card" style="margin-top: 10px;">
+      <h4>📊 خلاصة تقرير حالة درجات الفصل</h4>
+      <div id="grades-report-content"></div>
+    </div>
+
+    <div id="printable-grades-area" class="table-scroll container-sticky-table" style="margin-top: 15px;">
+      <table class="app-table table-input-focus sheet-table-bordered">
+        <thead>
+          <tr>
+            <th class="sticky-side col-m" style="width: 40px;">م</th>
+            <th class="sticky-side col-m">رقم الجلوس</th> <!-- 💡 التعديل هنا -->
+            <th class="sticky-side col-name">اسم الطالب</th>
+            <!-- باقي الأعمدة كما هي -->
+
+            <th class="col-score-head">المواظبة <br><small>(20)</small></th>
+            <th class="col-score-head">الواجبات <br><small>(20)</small></th>
+            <th class="col-score-head">الشفوي <br><small>(20)</small></th>
+            <th class="col-score-head">التحريري <br><small>(40)</small></th>
+            <th class="col-score-head">المجموع <br><small>(100)</small></th>
+            <th class="col-action-head no-print">بطاقة الطالب</th>
+          </tr>
+        </thead>
+        <tbody id="grades-sheet-tbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="screen-attendance-sheet" class="screen">
+    <div class="compact-toolbar">
+      <div class="filter-row">
+        <div class="compact-filter-item">
+          <label class="field-label-xs">الصف الدراسـي</label>
+          <select id="attendance-filter-class" onchange="loadAttendanceSheet()"></select>
+        </div>
+        <div class="compact-filter-item">
+          <label class="field-label-xs">المادة الدراسيـة</label>
+                    <select id="attendance-filter-subject" onchange="handleSubjectChange('attendance')">
+            <option value="لغة إنجليزية">لغة إنجليزية</option>
+            <option value="قرآن كريم">قرآن كريم</option>
+            <option value="تربية إسلامية">تربية إسلامية</option>
+            <option value="لغة عربية">لغة عربية</option>
+            <option value="رياضيات">رياضيات</option>
+            <option value="فيزياء">فيزياء</option>
+            <option value="كيمياء">كيمياء</option>
+            <option value="أحياء">أحياء</option>
+            <option value="تاريخ">تاريخ</option>
+            <option value="جغرافيا">جغرافيا</option>
+            <option value="اجتماعيات">اجتماعيات</option> <!-- 💡 هذا السطر كان مفقوداً -->
+            <option value="وطنية">وطنية</option>
+            <option value="حاسوب">حاسوب</option>
+            <option value="custom">✍️ إدخال مادة يدوية...</option>
+          </select>
+
+          <input type="text" id="attendance-custom-subject" class="hidden compact-custom-input" placeholder="اكتب اسم المادة..." oninput="loadAttendanceSheet()" />
+        </div>
+        <div class="compact-filter-item">
+          <label class="field-label-xs">الشهــر</label>
+          <select id="attendance-filter-month" onchange="loadAttendanceSheet()">
+            <optgroup label="الأشهر الميلادية">
+              <option value="يناير">يناير</option>
+              <option value="فبراير">فبراير</option>
+              <option value="مارس">مارس</option>
+              <option value="أبريل">أبريل</option>
+              <option value="مايو">مايو</option>
+              <option value="يونيو">يونيو</option>
+              <option value="يوليو">يوليو</option>
+              <option value="أغسطس">أغسطس</option>
+              <option value="سبتمبر" selected>سبتمبر</option>
+              <option value="أكتوبر">أكتوبر</option>
+              <option value="نوفمبر">نوفمبر</option>
+              <option value="ديسمبر">ديسمبر</option>
+            </optgroup>
+            <optgroup label="الأشهر الهجرية">
+              <option value="محرم">محرم</option>
+              <option value="صفر">صفر</option>
+              <option value="ربيع الأول">ربيع الأول</option>
+              <option value="ربيع الآخر">ربيع الآخر</option>
+              <option value="جمادى الأولى">جمادى الأولى</option>
+              <option value="جمادى الآخرة">جمادى الآخرة</option>
+              <option value="رجب">رجب</option>
+              <option value="شعبان">شعبان</option>
+              <option value="رمضان">رمضان</option>
+              <option value="شوال">شوال</option>
+              <option value="ذو القعدة">ذو القعدة</option>
+              <option value="ذو الحجة">ذو الحجة</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <div class="compact-filter-item size-sm">
+          <label class="field-label-xs">عدد حصص الشهر</label>
+          <input type="number" id="input-total-sessions" value="20" placeholder="الحصص" title="أدخل إجمالي حصص المادة في الشهر" onchange="loadAttendanceSheet()" />
+        </div>
+        <div class="compact-filter-item size-date">
+          <label class="field-label-xs">تاريخ اليوم</label>
+          <input type="date" id="attendance-date-input" onchange="loadAttendanceSheet()" />
+        </div>
+      </div>
+      
+      <!-- 💡 القائمة المنسدلة الذكية لإجراءات الحضور -->
+      <div class="action-row-grid" style="margin-top: 15px; display: flex; justify-content: center; align-items: center;">
+        <select id="attendanceActionSelect" onchange="executeAttendanceAction(this)" style="padding: 12px; border-radius: 8px; border: 2px solid #5A2E99; font-family: 'Cairo', sans-serif; font-size: 15px; font-weight: bold; color: #3B1E63; background: #F3E8FF; cursor: pointer; width: 100%; max-width: 400px; outline: none; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+          <option value="">⚙️ اختر إجراء أو تقرير...</option>
+          <option value="toggle_view">🔄 تبديل طريقة العرض (يومي / كشف الشهر)</option>
+          <option value="image_absence">🚨 تصدير كشف الغياب كصورة</option>
+          <option value="pdf">🖨️ تصدير كافة الصفحات (PDF)</option>
+          <option value="excel">📤 تصدير كشف الحضور (.xlsx)</option>
+        </select>
+      </div>
+    </div>
+<div class="bulk-attendance-actions" style="display: flex; gap: 10px; margin-bottom: 12px; justify-content: center; align-items: center;">
+  <button type="button" onclick="markAllAttendance('present')" style="background-color: #2E7D32; color: white; border: none; padding: 6px 14px; border-radius: 20px; font-family: 'Cairo'; font-size: 12px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.15); transition: transform 0.2s;">
+    ✅ رصد الكل حاضر
+  </button>
+  <button type="button" onclick="markAllAttendance('absent')" style="background-color: #C62828; color: white; border: none; padding: 6px 14px; border-radius: 20px; font-family: 'Cairo'; font-size: 12px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.15); transition: transform 0.2s;">
+    ❌ رصد الكل غائب
+  </button>
+</div>
+    <div id="monthly-attendance-area" class="table-scroll hidden">
+      <h4 style="margin: 8px 4px; color: var(--purple-dark);">📊 كشف الغياب التراكمي للشهر الحالي</h4>
+      <table class="app-table sheet-table-bordered" id="monthly-table">
+        <thead>
+          <tr>
+            <th style="width: 50px;">م</th>
+            <th>اسم الطالب</th>
+            <th style="width: 120px;">مجموع الحضور</th>
+            <th style="width: 120px;">مجموع الغياب</th>
+            <th style="width: 130px;">درجة المواظبة (20)</th>
+          </tr>
+        </thead>
+        <tbody id="monthly-tbody"></tbody>
+      </table>
+    </div>
+
+    <div id="printable-attendance-area" class="table-scroll">
+      <table class="app-table sheet-table-bordered">
+        <thead>
+          <tr>
+            <th style="width: 50px;">م</th>
+            <th style="min-width: 180px; text-align: right;">اسم الطالب</th>
+            <th style="width: 210px;">رصد الحالة لليوم (انقر للتغيير)</th>
+            <th style="width: 90px;">حاضر (شهر)</th>
+            <th style="width: 90px;">غائب (شهر)</th>
+            <th style="width: 120px;">المواظبة المكتسبة</th>
+          </tr>
+        </thead>
+        <tbody id="attendance-sheet-tbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<div id="student-report-modal" class="modal-overlay hidden">
+  <div class="student-modal-card">
+    <div class="modal-header">
+      <h4>📋 بطاقة درجات الطالب الشهرية</h4>
+      <button class="close-modal-btn" onclick="closeStudentModal()">❌</button>
+    </div>
+    <div id="single-student-card-content" class="printable-card-box"></div>
+    <div class="modal-footer-actions">
+      <button class="btn-action btn-purple-medium" onclick="exportStudentCardAsImage()">🖼️ حفظ كبطاقة صورة</button>
+      <button class="btn-action btn-outline" style="margin-top: 8px;" onclick="copyStudentCardText()">📋 نسخ نص البطاقة للواتساب</button>
+    </div>
+  </div>
+</div>
+
+<script src="xlsx.bundle.js"></script>
+<script src="html2pdf.bundle.min.js"></script>
+<script src="html2canvas.min.js"></script>
+<script src="grades_app.js"></script>
+</body>
+
+<!-- Mirrored from https://teacheraihayel.netlify.app/grades.html by HTTrack Website Copier/3.x [XR&CO], Sun, 04 Oct 2026 16:15:10 GMT -->
+</html>
