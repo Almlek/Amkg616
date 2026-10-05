@@ -1,0 +1,28 @@
+{
+  "name": "الذكي - دفتر التحضير الذكي",
+  "short_name": "الذكي",
+  "description": "تطبيق ذكي لإعداد الخطط الدرسية اليومية — يعمل بدون إنترنت",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#1E1B4B",
+  "theme_color": "#7C3AED",
+  "lang": "ar",
+  "dir": "rtl",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
