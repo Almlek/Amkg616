@@ -2,6 +2,9 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
+<!-- This site is hosted on Netlify. Anyone can build and deploy a site
+     like this one for free: https://netlify.new/?utm_campaign=loops&utm_source=ai-legible&utm_medium=owned&utm_content=comment&utm_id=5ddc4271-c3ac-4ed2-b6d0-89e7e73ce820
+     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#7C3AED">
 <meta name="mobile-web-app-capable" content="yes">
@@ -285,6 +288,18 @@
       <span class="tile-title">مُحرّر اختبارات يدوياً</span>
       <span class="tile-subtitle">تصميم الاختبارات وتنسيقها برغبتك</span>
     </button>
+          <button class="tile" onclick="openElectroExamModal()">
+      <span class="tile-icon">👨‍🏫</span>
+      <span class="tile-title">بوابة المعلم الإلكترونية</span>
+      <span class="tile-subtitle">إدارة الاختبارات، الفصول، وإرسال الإشعارات للطلاب</span>
+    </button>
+
+    <button class="tile" onclick="openStudentPortalModal()">
+      <span class="tile-icon">👨‍🎓</span>
+      <span class="tile-title">بوابة الطلاب</span>
+      <span class="tile-subtitle">الدخول للاختبارات الإلكترونية السحابية</span>
+    </button>
+
         <button class="tile" onclick="window.location.href='aicorrector.html'">
       <span class="tile-icon">💯</span>
       <span class="tile-title">مصحح الاختبار الذكي</span>
@@ -341,9 +356,60 @@
           <div class="grid-2">
             <label class="field"><span>المدرسة</span><input id="fSchool" type="text" placeholder="اسم المدرسة"></label>
             <label class="field"><span>المعلم</span><input id="fTeacher" type="text" placeholder="اسم المعلم"></label>
-            <label class="field"><span>المادة</span><input id="fSubject" type="text" placeholder="اللغة الإنجليزية"></label>
-            <label class="field"><span>الصف</span><input id="fGrade" type="text" placeholder="الثاني الثانوي"></label>
-            <label class="field"><span>الشعبة</span><input id="fSection" type="text" placeholder="أ"></label>
+                     <!-- 📚 المادة (قائمة إجبارية) -->
+          <label class="field">
+            <span>المادة <span style="color:#ef4444">*</span></span>
+            <select id="fSubject" class="form-sel" required>
+              <option value="">اختر المادة...</option>
+              <option value="القرآن الكريم">القرآن الكريم</option>
+              <option value="التربية الإسلامية">التربية الإسلامية</option>
+              <option value="اللغة العربية">اللغة العربية</option>
+              <option value="اللغة الإنجليزية">اللغة الإنجليزية</option>
+              <option value="الرياضيات">الرياضيات</option>
+              <option value="العلوم">العلوم</option>
+              <option value="الفيزياء">الفيزياء</option>
+              <option value="الكيمياء">الكيمياء</option>
+              <option value="الأحياء">الأحياء</option>
+              <option value="الاجتماعيات">الاجتماعيات</option>
+              <option value="التأريخ">التأريخ</option>
+              <option value="الجغرافيا">الجغرافيا</option>
+              <option value="التربية الوطنية">التربية الوطنية</option>
+              <option value="الحاسوب">الحاسوب</option>
+            </select>
+          </label>
+
+          <!-- 🏫 الصف (قائمة إجبارية) -->
+          <label class="field">
+            <span>الصف <span style="color:#ef4444">*</span></span>
+            <select id="fGrade" class="form-sel" required>
+              <option value="">اختر الصف...</option>
+              <optgroup label="المرحلة الأساسية">
+                <option value="الأول الأساسي">الأول الأساسي</option>
+                <option value="الثاني الأساسي">الثاني الأساسي</option>
+                <option value="الثالث الأساسي">الثالث الأساسي</option>
+                <option value="الرابع الأساسي">الرابع الأساسي</option>
+                <option value="الخامس الأساسي">الخامس الأساسي</option>
+                <option value="السادس الأساسي">السادس الأساسي</option>
+                <option value="السابع الأساسي">السابع الأساسي</option>
+                <option value="الثامن الأساسي">الثامن الأساسي</option>
+                <option value="التاسع الأساسي">التاسع الأساسي</option>
+              </optgroup>
+              <optgroup label="المرحلة الثانوية">
+                <option value="أول ثانوي">أول ثانوي</option>
+                <option value="ثاني ثانوي - علمي">ثاني ثانوي - علمي</option>
+                <option value="ثاني ثانوي - أدبي">ثاني ثانوي - أدبي</option>
+                <option value="ثالث ثانوي - علمي">ثالث ثانوي - علمي</option>
+                <option value="ثالث ثانوي - أدبي">ثالث ثانوي - أدبي</option>
+              </optgroup>
+            </select>
+          </label>
+
+          <!-- 🚪 الشعبة (نصي واختياري) -->
+          <label class="field">
+            <span>الشعبة <span style="font-size: 0.85em; color: #64748b; font-weight: normal;">(اختياري)</span></span>
+            <input id="fSection" type="text" placeholder="مثال: أ ، ب ، 1 ، 2...">
+          </label>
+
             <label class="field"><span>التاريخ</span><input id="fDate" type="date"></label>
             <label class="field"><span>الحصة</span><input id="fPeriod" type="text" placeholder="الأولى"></label>
           </div>
@@ -566,13 +632,16 @@
     </div>
   </div>
 
-  <div class="arch-filter-row">
+   <div class="arch-filter-row">
     <select class="form-sel" id="archiveGradeFilter"><option value="">كل الصفوف</option></select>
     <select class="form-sel" id="archiveSubjectFilter"><option value="">كل المواد</option></select>
   </div>
+
+
   <div class="arch-search-wrap">
     <input type="search" id="archiveSearch" class="search-inp" placeholder="🔍 بحث...">
   </div>
+
   <div class="arch-select-toolbar" id="archSelectToolbar" hidden></div>
   <div id="archiveList" class="archive-list"></div>
   <p class="empty-state" id="archiveEmpty" hidden>لا توجد خطط محفوظة بعد.</p>
@@ -611,6 +680,10 @@
         <select class="form-sel" id="bankGradeFilter"><option value="">كل الصفوف</option></select>
         <select class="form-sel" id="bankSubjectFilter"><option value="">كل المواد</option></select>
       </div>
+    <!-- زر فتح سحابة الذكي -->
+    <button onclick="openCloudModal()" style="width: 100%; background: linear-gradient(135deg, #0ea5e9, #3b82f6); color: white; border: none; padding: 14px; border-radius: 12px; font-weight: 900; font-size: 16px; margin-bottom: 15px; cursor: pointer; box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);">
+      ☁️ تصفح سحابة المعلمين (تنزيل دروس جاهزة)
+    </button>
 
       <!-- قائمة الدروس المحفوظة -->
       <div id="bankList" class="bank-list"></div>
@@ -618,6 +691,7 @@
 
       <!-- أزرار الإنشاء الشامل -->
       <div class="bank-actions-row">
+        <button class="btn-sec btn-lg" onclick="triggerBulkCloudUpload()" style="background:#0ea5e9; color:#fff; border-color:#0284c7;">☁️ مشاركة للسحابة (للمحدد)</button>
         <button class="btn-sec btn-lg" id="btnGenTutor" style="background:#4f46e5;color:#fff;border-color:#3730a3;">👨‍🎓 معلم تفاعلي (للطلاب)</button>
         <button class="btn-primary btn-lg" id="btnGenBankQuiz">📝 اختبار شامل</button>
         <button class="btn-sec btn-lg btn-official-exam" id="btnGenOfficialExam">🧪 إنشاء اختبار رسمي</button>
@@ -678,7 +752,27 @@
         <label class="field"><span>المدرسة</span><input id="sSchool" type="text" placeholder="اسم المدرسة"></label>
         <label class="field"><span>المعلم</span><input id="sTeacher" type="text" placeholder="اسم المعلم"></label>
         <label class="field"><span>المديرية</span><input id="sDirectorate" type="text" placeholder="مديرية التربية"></label>
-        <label class="field"><span>المادة الافتراضية</span><input id="sSubject" type="text" placeholder="اللغة الإنجليزية"></label>
+               <label class="field">
+          <span>المادة الافتراضية</span>
+          <select id="sSubject" class="form-sel">
+            <option value="">اختر المادة...</option>
+            <option value="القرآن الكريم">القرآن الكريم</option>
+            <option value="التربية الإسلامية">التربية الإسلامية</option>
+            <option value="اللغة العربية">اللغة العربية</option>
+            <option value="اللغة الإنجليزية">اللغة الإنجليزية</option>
+            <option value="الرياضيات">الرياضيات</option>
+            <option value="العلوم">العلوم</option>
+            <option value="الفيزياء">الفيزياء</option>
+            <option value="الكيمياء">الكيمياء</option>
+            <option value="الأحياء">الأحياء</option>
+            <option value="الاجتماعيات">الاجتماعيات</option>
+            <option value="التأريخ">التأريخ</option>
+            <option value="الجغرافيا">الجغرافيا</option>
+            <option value="التربية الوطنية">التربية الوطنية</option>
+            <option value="الحاسوب">الحاسوب</option>
+          </select>
+        </label>
+
         <label class="field">
           <span>اللغة الافتراضية</span>
           <select id="sDefaultLang" class="form-sel">
@@ -776,8 +870,8 @@
         </button>
         <div class="help-panel" hidden>
           <p>هو مساعدك الذكي والشامل الذي يعمل (أوفلاين)، يقدّم لك: خطط تحضير كاملة، سبورات درسية، عروض PowerPoint، دروس صوتية تُصدّر كفيديو، ملخصات تفاعلية، خرائط ذهنية، حل وتقسيم للنماذج الوزارية، واختبارات بجميع أنواعها (شفوية، إلكترونية، وورقية).</p>
-          <p>من إعداد الأستاذ / <strong>عبدالملك عبدالرحمن</strong> — محافظة عمران، مديرية خمر<br>
-          أستاذ مادة اللغة العربية  في مدرسة السلام  الأساسية</p>
+          <p>من إعداد الأستاذ / <strong>هايل سعيد</strong> — محافظة الضالع، مديرية الحشاء<br>
+          أستاذ مادة اللغة الإنجليزية في مدرسة حِميَر زَربة الثانوية</p>
           <a href="https://wa.me/qr/3W6L7SIKSTZKN1" target="_blank" rel="noopener" class="whatsapp-btn" style="display:flex; align-items:center; gap:8px; background:#25D366; color:white; padding:10px; border-radius:8px; text-decoration:none; font-weight:bold; margin-top:10px;">
             <svg viewBox="0 0 24 24" width="20" height="20" fill="#ffffff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.555 4.122 1.527 5.855L.057 23.522a.5.5 0 0 0 .614.65l5.88-1.536A11.95 11.95 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.891 0-3.661-.496-5.193-1.363l-.372-.22-3.85 1.007 1.024-3.74-.242-.386A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
             للتواصل والدعم عبر واتساب
@@ -1046,22 +1140,24 @@
         
         <label class="field">
           <span>المادة</span>
-          <select id="hwSubject" class="form-sel">
-            <option value="قرآن كريم">قرآن كريم</option>
-            <option value="تربية إسلامية">تربية إسلامية</option>
-            <option value="لغة عربية">لغة عربية</option>
-            <option value="لغة إنجليزية" selected>لغة إنجليزية</option>
-            <option value="رياضيات">رياضيات</option>
-            <option value="فيزياء">فيزياء</option>
-            <option value="كيمياء">كيمياء</option>
-            <option value="أحياء">أحياء</option>
-            <option value="تاريخ">تاريخ</option>
-            <option value="جغرافيا">جغرافيا</option>
-            <option value="اجتماعيات">اجتماعيات</option>
-            <option value="وطنية">وطنية</option>
-            <option value="حاسوب">حاسوب</option>
-            <option value="custom">✍️ إدخال مادة يدوية...</option>
-          </select>
+         <select id="hwSubject" class="form-sel">
+  <option value="القرآن الكريم">القرآن الكريم</option>
+  <option value="التربية الإسلامية">التربية الإسلامية</option>
+  <option value="اللغة العربية">اللغة العربية</option>
+  <option value="اللغة الإنجليزية" selected>اللغة الإنجليزية</option>
+  <option value="الرياضيات">الرياضيات</option>
+  <option value="العلوم">العلوم</option>
+  <option value="الفيزياء">الفيزياء</option>
+  <option value="الكيمياء">الكيمياء</option>
+  <option value="الأحياء">الأحياء</option>
+  <option value="التأريخ">التأريخ</option>
+  <option value="الجغرافيا">الجغرافيا</option>
+  <option value="التربية الوطنية">التربية الوطنية</option>
+  <option value="الحاسوب">الحاسوب</option>
+  <option value="الاجتماعيات">الاجتماعيات</option>
+  <option value="custom">✍️ إدخال مادة يدوية...</option>
+</select>
+
         </label>
       </div>
 
@@ -1212,6 +1308,54 @@
   </div>
 </div>
 
+<!-- 🚀 نافذة منصة الاختبارات الإلكترونية -->
+<div class="modal-bg" id="electroExamModal">
+  <div class="modal-card" style="max-width: 850px; width: 95%; padding: 20px; text-align: right; border-radius: 16px; max-height: 90vh; overflow-y: auto;">
+    
+    <!-- شريط علوي للنافذة -->
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 2px solid #e2e8f0; padding-bottom: 15px; margin-bottom: 20px;">
+      <h2 style="color: #0284c7; margin: 0; font-size: 22px; font-weight: 900;">منصة الاختبارات الإلكترونية</h2>
+      <button onclick="document.getElementById('electroExamModal').classList.remove('is-active')" style="background: #ef4444; color: white; border: none; border-radius: 8px; padding: 8px 15px; font-weight: bold; cursor: pointer;">❌ إغلاق</button>
+    </div>
+
+    <!-- 🌟 حاوية المنصة: هنا سيقوم ملف electroexam.js برسم الواجهة تلقائياً -->
+    <div id="electroExamMainContainer"></div>
+
+  </div>
+</div>
+
+  <!-- 👨‍🎓 نافذة بوابة الطلاب (مستقلة وتعمل بنظام iframe) -->
+<div class="modal-bg" id="studentPortalModal">
+  <div class="modal-card" style="max-width: 450px; width: 95%; height: 85vh; padding: 0; display: flex; flex-direction: column; overflow: hidden; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+    
+    <!-- الشريط العلوي للنافذة -->
+    <div style="background: linear-gradient(135deg, #4f46e5, #3b82f6); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;">
+      <h2 style="color: white; margin: 0; font-size: 18px; font-weight: 900;">👨‍🎓 بوابة الطلاب</h2>
+      <button onclick="document.getElementById('studentPortalModal').classList.remove('is-active')" style="background: rgba(255,255,255,0.2); color: white; border: none; border-radius: 8px; padding: 6px 12px; font-weight: bold; cursor: pointer; transition: 0.2s;">✕ إغلاق</button>
+    </div>
+
+    <!-- إطار البوابة (يستدعي ملف student.html بأمان تام) -->
+    <iframe src="student.html" style="width: 100%; flex: 1; border: none; background: #f1f5f9;"></iframe>
+    
+  </div>
+</div>
+
+  <!-- 📤 نافذة إرسال الملفات من الأرشيف لبوابة الطلاب -->
+<div class="modal-bg" id="shareFromArchiveModal">
+  <div class="modal-card" style="max-width: 400px; padding: 20px; text-align: right; border-radius: 16px;">
+    <h3 style="color: #10b981; margin-bottom: 15px; font-size: 18px; font-weight: 900;">📤 إرسال للمكتبة الرقمية</h3>
+    <p style="color: #64748b; font-size: 13px; font-weight: bold; margin-bottom: 15px;">اختر الفصل الذي تريد إرسال الملفات المحددة إليه (سيتم تجاهل الخطط تلقائياً):</p>
+    
+    <select id="portalSelectArchive" style="width: 100%; padding: 12px; border-radius: 8px; border: 2px solid #cbd5e1; font-weight: bold; margin-bottom: 20px; color: #0369a1; outline: none; font-family: inherit;">
+      <!-- سيتم حقن الفصول هنا تلقائياً -->
+    </select>
+    
+    <div style="display: flex; gap: 10px;">
+      <button onclick="executeShareFromArchive()" style="flex: 1; background: #10b981; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-family: inherit;">إرسال الآن 🚀</button>
+      <button onclick="document.getElementById('shareFromArchiveModal').classList.remove('is-active')" style="flex: 1; background: #ef4444; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-family: inherit;">إلغاء</button>
+    </div>
+  </div>
+</div>
 
 <!-- ═══════════════ OVERLAY + TOAST ═══════════════ -->
 <div class="overlay" id="loadingOverlay">
@@ -1232,9 +1376,19 @@
 <script src="mermaid.min.js"></script>
 <script src="jszip.min.js"></script>
 <script src="pptxgen.min.js"></script>
-<script src="electroexam.js"></script>
+
+<!-- 1. مكتبات السحابة Firebase (يجب أن تُقرأ أولاً) -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<!-- 2. الكود الأساسي للتطبيق -->
 <!-- 💡 تم إضافة ?v=5.1 لكسر الكاش وإجبار الهاتف على قراءة التحديثات الجديدة 💡 -->
 <script src="core.js?v=5.1"></script>
+<script src="cloud.js"></script>
+
+<!-- 3. منصة الاختبارات وباقي الملفات -->
+<script src="electroexam.js"></script>
 <script src="exam-builder.js?v=5.1"></script>
 <script src="evaluation.js"></script>
 <script src="onboarding.js"></script>
@@ -1243,6 +1397,279 @@
 <script src="assistant.js" defer></script>
 <script src="homework.js?v=5.1"></script>
 
+<script>
+  function openElectroExamModal() {
+    // 1. فتح النافذة
+    document.getElementById('electroExamModal').classList.add('is-active');
+    
+    // 2. تشغيل الواجهة بداخلها
+    if (typeof ElectroExamApp !== 'undefined') {
+      ElectroExamApp.init();
+    } else {
+      alert("⚠️ لم يتم تحميل ملف electroexam.js بشكل صحيح. تأكد من وجوده.");
+    }
+  }
+    // 👨‍🎓 دالة فتح بوابة الطلاب
+  function openStudentPortalModal() {
+    document.getElementById('studentPortalModal').classList.add('is-active');
+  }
+
+    // ☁️ دالة تشغيل الرفع السحابي الجماعي (مع نافذة اختيار الفصل المنسدلة)
+  function triggerBulkCloudUpload() {
+      const checkedBoxes = document.querySelectorAll('.bank-chk:checked');
+      
+      if (checkedBoxes.length === 0) {
+          if (typeof toast === 'function') toast('يرجى تحديد درس واحد على الأقل للرفع', 'error');
+          else alert('يرجى تحديد درس واحد على الأقل للرفع');
+          return;
+      }
+
+      // إزالة أي نافذة سابقة لضمان عدم التداخل
+      let oldModal = document.getElementById('bulkSemesterModal');
+      if (oldModal) oldModal.remove();
+
+      // إنشاء نافذة منسدلة احترافية لاختيار الفصل
+      const modal = document.createElement('div');
+      modal.className = 'modal-bg is-active';
+      modal.id = 'bulkSemesterModal';
+      modal.style.zIndex = '99999';
+
+      modal.innerHTML = `
+        <div class="modal-card" style="max-width: 380px; text-align: center; padding: 20px; border-radius: 16px;">
+          <div class="modal-hdr" style="justify-content: center; position: relative; border-bottom: 2px dashed #e2e8f0; padding-bottom: 10px;">
+            <h2 style="color: #0ea5e9; margin: 0; font-size: 19px; font-weight: 900;">🎯 تحديد الفصل الدراسي للرفع</h2>
+            <button class="modal-close" style="position: absolute; left: 0; top: -5px;" onclick="document.getElementById('bulkSemesterModal').remove()">✕</button>
+          </div>
+          
+          <div class="modal-body" style="display:flex; flex-direction:column; gap:12px; padding-top: 15px; text-align: right;">
+            <label style="font-weight: 900; font-size: 13.5px; color: #1e293b;">
+              اختر الفصل الدراسي المخصص لهذه الدروس:
+              <select id="selectBulkSemester" style="width:100%; padding:11px; border-radius:8px; border:2px solid #cbd5e1; font-family:inherit; font-weight:bold; font-size:14px; margin-top:6px; outline:none; background:#fff; color:#1e293b;">
+                <option value="الفصل الأول">الفصل الدراسي الأول</option>
+                <option value="الفصل الثاني">الفصل الدراسي الثاني</option>
+              </select>
+            </label>
+
+            <button id="btnConfirmBulkUpload" class="btn-primary" style="padding:13px; border-radius:10px; font-size:15px; font-weight:900; background:#0ea5e9; border:none; color:white; cursor:pointer; margin-top: 5px;">
+              متابعة الرفع للسحابة 🚀
+            </button>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(modal);
+      modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+
+      // عند الضغط على زر المتابعة
+      document.getElementById('btnConfirmBulkUpload').onclick = async function() {
+          const finalSemester = document.getElementById('selectBulkSemester').value;
+          modal.remove();
+
+          const idsArray = Array.from(checkedBoxes).map(cb => parseInt(cb.value));
+
+          // ترقية الدروس القديمة في قاعدة البيانات المحلية قبل الرفع السحابي
+          try {
+              if(typeof showOverlay === 'function') showOverlay('جاري تجهيز وتصنيف الدروس...');
+              const storeName = typeof EXTRACTS_STORE !== 'undefined' ? EXTRACTS_STORE : 'extracts';
+              
+              for (let id of idsArray) {
+                  let record = await window.dbGet(storeName, id);
+                  if (record && !record.semester) {
+                      record.semester = finalSemester;
+                      await window.dbPut(storeName, record); 
+                  }
+              }
+              if(typeof hideOverlay === 'function') hideOverlay();
+          } catch(e) {
+              console.error("خطأ في تحديث الدروس القديمة:", e);
+          }
+          
+          // إرسالها لدالة السحابة لرفعها
+          if (window.prepareBulkUploadToCloud) {
+              window.prepareBulkUploadToCloud(idsArray);
+          } else {
+              alert('عذراً، وظيفة السحابة غير متوفرة حالياً.');
+          }
+      };
+  }
+
+  // 🔄 دالة إحياء زر المشاركة الفردي ليعمل بنفس كفاءة الزر الجماعي
+  window.triggerSingleCloudUpload = function(lessonId) {
+      // 1. إلغاء تحديد جميع الدروس في القائمة أولاً
+      document.querySelectorAll('.bank-chk').forEach(cb => cb.checked = false);
+      
+      // 2. تحديد مربع الاختيار (Checkbox) الخاص بالدرس المراد رفعه فقط
+      const targetCheckbox = document.querySelector(`.bank-chk[value="${lessonId}"]`);
+      if (targetCheckbox) {
+          targetCheckbox.checked = true;
+      }
+      
+      // 3. استدعاء دالة الرفع الجماعي الذكية التي تفتح نافذة اختيار الفصل المنسدلة
+      if (typeof triggerBulkCloudUpload === 'function') {
+          triggerBulkCloudUpload();
+      } else {
+          alert('عذراً، وظيفة السحابة غير متوفرة حالياً.');
+      }
+  };
+
+  // ══════════════════════════════════════════════════════════════
+  // 📤 دوال مشاركة ملفات الأرشيف مع بوابة الطلاب
+  // ══════════════════════════════════════════════════════════════
+
+  // 1. التحضير للمشاركة (فحص التحديد وجلب الفصول)
+  function prepareShareFromArchive() {
+      // جلب كل مربعات التحديد المختارة داخل قائمة الأرشيف
+      const checkedBoxes = document.querySelectorAll('#archiveList input[type="checkbox"]:checked');
+      
+      if (checkedBoxes.length === 0) {
+          alert("⚠️ يرجى تحديد ملف واحد على الأقل من الأرشيف لإرساله.");
+          return;
+      }
+      
+      let teacherPortals = JSON.parse(localStorage.getItem('haael_teacher_portals') || '[]');
+      if (teacherPortals.length === 0) {
+          alert("⚠️ لا توجد فصول مسجلة! يرجى إنشاء بوابة فصل من 'بوابة المعلم الإلكترونية' أولاً.");
+          return;
+      }
+      
+      const select = document.getElementById('portalSelectArchive');
+      select.innerHTML = '<option value="">-- اختر بوابة الصف --</option>';
+      teacherPortals.forEach(p => {
+          select.innerHTML += `<option value="${p.code}">${p.school} - ${p.grade} (${p.year})</option>`;
+      });
+      
+      document.getElementById('shareFromArchiveModal').classList.add('is-active');
+  }
+
+    // 2. التنفيذ (الرفع السحابي المتوافق مع core.js)
+  async function executeShareFromArchive() {
+      const portalCode = document.getElementById('portalSelectArchive').value;
+      if (!portalCode) {
+          alert("⚠️ يرجى اختيار الفصل أولاً.");
+          return;
+      }
+      
+      const btn = event.target;
+      const originalBtnText = btn.innerHTML;
+      btn.innerHTML = "⏳ جاري الإرسال...";
+      btn.disabled = true;
+
+      const checkedBoxes = document.querySelectorAll('#archiveList input[type="checkbox"]:checked');
+      const ids = Array.from(checkedBoxes).map(cb => {
+          let val = cb.value;
+          if (!val || val === 'on') val = cb.getAttribute('data-id');
+          if (!val || val === 'on') {
+              let parent = cb.closest('[data-id], .archive-item');
+              if (parent) val = parent.getAttribute('data-id');
+          }
+          return parseInt(val);
+      }).filter(id => !isNaN(id));
+
+      if (ids.length === 0) {
+          alert("❌ لم يتم التعرف على الملفات المحددة بشكل صحيح. يرجى إعادة التحديد.");
+          btn.innerHTML = originalBtnText;
+          btn.disabled = false;
+          return;
+      }
+
+      let successCount = 0;
+      let skippedCount = 0;
+      
+      // دالة مساعدة لحماية النصوص
+      const escText = (s) => String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+      try {
+          for (let id of ids) {
+              let storeName = typeof LESSONS_STORE !== 'undefined' ? LESSONS_STORE : 'lessons';
+              let rec = await window.dbGet(storeName, id);
+              
+              if (!rec) continue;
+              
+              // 🛑 نظام الحماية: تجاوز الخطط، الصوتيات، والخرائط الذهنية
+              if (rec.kind === 'plan' || rec.kind === 'audio' || rec.kind === 'mindmap' || (rec.title && rec.title.includes('خطة'))) {
+                  skippedCount++;
+                  continue;
+              }
+              
+              let finalHtml = "";
+
+              // 1. مسار الملخص التفاعلي (يعتمد على دالتك التي تتضمن النطق والتصحيح)
+              if (rec.kind === 'quiz' && !rec.isDoc) {
+                  finalHtml = window.buildStandaloneQuizHtml(rec);
+              } 
+              // 2. مسار المستندات الحرة (اختبارات مطبوعة، ملخصات شاملة، نماذج إجابة)
+              else if (rec.isDoc) {
+                  finalHtml = window.buildStandaloneDocHtml(rec);
+              } 
+              // 3. مسار السبورات
+              else if (rec.kind === 'board') {
+                  const d = (rec.showTranslation && rec.translatedData) ? rec.translatedData : rec.planData;
+                  const boardContent = window.renderBoard(d, rec);
+                  const isEnglish = rec.language === 'en';
+                  finalHtml = `<!DOCTYPE html>
+<html dir="${isEnglish ? 'ltr' : 'rtl'}" lang="${isEnglish ? 'en' : 'ar'}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>${escText(rec.title || 'سبورة الدرس')}</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>body { padding: 20px; background: #e2e8f0; font-family: 'Cairo', sans-serif; }</style>
+</head>
+<body>${boardContent}</body>
+</html>`;
+              } else {
+                  // نوع غير مدعوم
+                  skippedCount++;
+                  continue;
+              }
+              
+              let libraryItem = {
+                  title: rec.title || "ملف تعليمي",
+                  subject: rec.subject || "عام",
+                  kind: rec.kind || "other",
+                  htmlContent: encodeURIComponent(finalHtml),
+                  timestamp: firebase.database.ServerValue.TIMESTAMP
+              };
+              
+              await window.dbCloud.ref(`portals/${portalCode}/library`).push(libraryItem);
+              successCount++;
+          }
+          
+          document.getElementById('shareFromArchiveModal').classList.remove('is-active');
+          alert(`✅ تمت العملية بنجاح:\n- تم إرسال (${successCount}) ملف للمكتبة الرقمية.\n- تم تخطي (${skippedCount}) ملف (لأنها خطط، صوتيات، أو خرائط).`);
+          
+          checkedBoxes.forEach(cb => cb.checked = false);
+
+      } catch (error) {
+          alert("❌ حدث خطأ أثناء الإرسال: " + error.message);
+      } finally {
+          btn.innerHTML = originalBtnText;
+          btn.disabled = false;
+      }
+  }
+
+
+
+  // 3. إظهار وإخفاء الزر بذكاء بناءً على التبويب المفتوح
+  document.getElementById('archiveKindSegment').addEventListener('click', function(e) {
+      setTimeout(() => {
+          const activeBtn = this.querySelector('.active');
+          const shareBtn = document.getElementById('btnShareToPortal');
+          
+          if (!shareBtn) return;
+
+          if (activeBtn && activeBtn.dataset.kind === 'plan') {
+              // إذا كان التبويب المفتوح هو "الخطط"، أخفِ الزر
+              shareBtn.style.display = 'none';
+          } else {
+              // في أي تبويب آخر، أظهر الزر
+              shareBtn.style.display = 'inline-block';
+          }
+      }, 50); // تأخير بسيط لضمان تطبيق الكلاس 'active'
+  });
+
+</script>
 
 </body>
 </html>
+<script async src="/.netlify/scripts/hud?variant=public" data-nf-variant="public" data-netlify-site-id="5ddc4271-c3ac-4ed2-b6d0-89e7e73ce820" data-app-host="app.netlify.com"></script>
