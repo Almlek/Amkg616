@@ -1,0 +1,14 @@
+# الصفحة الرئيسية
+/    /index.html   200
+
+# صفحات التطبيق
+/grades    /grades.html   200
+/schedule  /schedule.html 200
+/exams     /exams.html    200
+/student   /student.html  200
+
+# إعادة التوجيه لـ 404
+/404.html  /index.html    404
+
+# إعادة توجيه كل شيء آخر إلى index.html
+/*    /index.html   200
