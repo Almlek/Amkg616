@@ -1,0 +1,651 @@
+/* =====================================================
+   تنسيق التباين العالي والأداء المدمج للموبايل والتابلت
+   إعدادات خاصة بملف الأستاذ هايل - تصميم بنفسجي عريض
+   ===================================================== */
+
+/* =====================================================
+   تعريف الخطوط المحلية (Offline Font)
+   ===================================================== */
+@font-face {
+  font-family: 'Cairo';
+  src: url('fonts/Cairo-Regular.ttf') format('truetype');
+  font-weight: 600; /* الوزن العادي */
+  font-style: normal;
+  font-display: swap;
+}
+
+/* إذا كان لديك ملفات لخطوط أخرى (مثل Cairo-Bold)، أضفها هنا أيضاً: */
+@font-face {
+  font-family: 'Cairo';
+  src: url('fonts/Cairo-Bold.woff') format('truetype');
+  font-weight: 700; /* الوزن العريض */
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --primary-dark: #3B1E63;    /* بنفسجي داكن جداً للترويسات والعناوين */
+  --primary-medium: #5A2E99;  /* بنفسجي وسطي للأزرار والتفاعلات */
+  --primary-light: #7C42C4;   /* بنفسجي مضيء */
+  --primary-accent: #9B63E6;  /* بنفسجي فاتح للمؤشرات */
+  --bg-light: #F6F3FA;        /* خلفية عامة مائلة للبنفسجي الهادئ جداً */
+  --surface: #FFFFFF;
+  --text-dark: #000000;       /* أعلى تباين ممكن للقراءة المريحة */
+  --text-muted: #2D3748;
+  --border-sheet: #3B1E63;    /* حدود بارزة جداً لتسطير الجداول التربوية */
+  
+  /* ألوان الحالات السريعة */
+  --success: #1B5E20;         /* أخضر داكن للحضور */
+  --danger: #B71C1C;          /* أحمر داكن للغياب */
+  --warning: #E65100;         /* برتقالي داكن للمرخص والتعويض */
+  --info: #01579B;
+  
+  --font-main: 'Cairo', sans-serif;
+}
+
+/* إعادة تهيئة وإعدادات عامة */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--bg-light);
+  color: var(--text-dark);
+  direction: rtl;
+  font-size: 16px;        /* حجم خط مناسب للرصد */
+  font-weight: 700;       /* جعل الخط عريضاً بشكل افتراضي لكامل التطبيق */
+  line-height: 1.5;
+  -webkit-user-select: none; /* منع التحديد العشوائي أثناء النقر السريع */
+  user-select: none;
+}
+
+/* شريط التنقل العلوي المدمج والموفر للمساحة (Compact Header) */
+#main-header {
+  background-color: var(--primary-dark);
+  color: white;
+  height: 55px; /* تضييق الارتفاع لتوفير مساحة للموبايل */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.header-right, .header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#header-title {
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.nav-btn {
+  background-color: var(--primary-light);
+  color: white;
+  border: 2px solid white;
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.teacher-badge {
+  background-color: var(--primary-medium);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 800;
+  border: 1px solid var(--primary-accent);
+}
+
+#save-indicator {
+  background-color: var(--success);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 5px;
+  font-size: 13px;
+  font-weight: 800;
+  animation: fadeIn 0.3s;
+}
+
+/* الحاوية الرئيسية للتطبيق */
+.app-container {
+  padding: 12px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* التحكم بظهور وإخفاء الشاشات */
+.screen {
+  display: none;
+}
+.screen.active {
+  display: block;
+}
+
+/* لوحة البانر الترحيبية */
+.welcome-banner {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+  color: white;
+  padding: 16px;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  text-align: center;
+  border: 2px solid var(--primary-dark);
+}
+.welcome-banner h2 { font-size: 22px; font-weight: 900; margin-bottom: 4px; }
+.welcome-banner p { font-size: 15px; opacity: 0.9; }
+
+/* شبكة أزرار لوحة التحكم الضخمة */
+.main-dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 600px) {
+  .main-dashboard-grid { grid-template-columns: 1fr; }
+}
+
+.dash-btn {
+  border-radius: 12px;
+  padding: 24px 16px;
+  color: white;
+  border: 2px solid var(--primary-dark);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  text-align: center;
+  transition: transform 0.1s;
+}
+.dash-btn:active { transform: scale(0.98); }
+.dash-icon { font-size: 36px; }
+.dash-text { font-size: 19px; font-weight: 900; }
+.dash-desc { font-size: 13px; opacity: 0.85; font-weight: 600; }
+
+.btn-purple-dark { background-color: var(--primary-dark); }
+.btn-purple-medium { background-color: var(--primary-medium); }
+.btn-purple-light { background-color: var(--primary-light); }
+.btn-purple-accent { background-color: var(--primary-accent); }
+
+/* كروت بناء النماذج والقوائم */
+.card {
+  background-color: var(--surface);
+  border: 2px solid var(--primary-dark);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+}
+.compact-card { padding: 12px; margin-bottom: 12px; }
+
+.card-title {
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--primary-dark);
+  margin-bottom: 12px;
+  border-bottom: 2px solid var(--primary-dark);
+  padding-bottom: 4px;
+}
+
+/* مجموعات الإدخال والنماذج */
+.form-group {
+  margin-bottom: 12px;
+}
+.form-group label {
+  display: block;
+  font-size: 15px;
+  font-weight: 800;
+  margin-bottom: 4px;
+  color: var(--primary-dark);
+}
+.form-group input, .form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid var(--primary-dark);
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 700;
+  color: black;
+  font-family: var(--font-main);
+  background-color: white;
+}
+.form-group input:focus, .form-group select:focus {
+  background-color: #F0E6FF;
+  outline: none;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* الأزرار التنفيذية القياسية */
+.btn-action {
+  background-color: var(--primary-medium);
+  color: white;
+  border: 2px solid var(--primary-dark);
+  padding: 10px 20px;
+  font-size: 17px;
+  font-weight: 900;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.btn-action:active { background-color: var(--primary-dark); }
+.full-width { width: 100%; }
+.btn-compact { padding: 6px 12px; font-size: 15px; white-space: nowrap; }
+
+/* شريط فلاتر مضغوط وموفر للمساحة التخزينية على الشاشة (Compact Toolbar) */
+.compact-toolbar {
+  background-color: #EFE9F7;
+  padding: 8px;
+  border-radius: 8px;
+  border: 2px solid var(--primary-dark);
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  width: 100%;
+}
+.compact-filter-item {
+  flex: 1;
+  min-width: 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.compact-filter-item.size-sm { flex: 0.5; min-width: 70px; }
+.compact-filter-item.size-date { flex: 1.2; min-width: 140px; }
+
+.field-label-xs {
+  font-size: 11px;
+  color: var(--primary-dark);
+  font-weight: 800;
+  margin-right: 2px;
+}
+
+.compact-filter-item select, 
+.compact-filter-item input[type="date"], 
+.compact-filter-item input[type="number"] {
+  width: 100%;
+  padding: 4px 6px;
+  border: 2px solid var(--primary-dark);
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 800;
+  background-color: white;
+  color: black;
+  height: 38px;
+}
+.compact-custom-input {
+  margin-top: 4px;
+  height: 36px;
+  padding: 4px 8px;
+  border: 2px solid var(--primary-light);
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  width: 100%;
+}
+
+/* شبكة أزرار العمليات الصغيرة والذكية */
+.action-row-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 6px;
+}
+
+.btn-xs {
+  padding: 8px 4px;
+  font-size: 12px;
+  font-weight: 800;
+  border-radius: 5px;
+  cursor: pointer;
+  border: 2px solid var(--primary-dark);
+  text-align: center;
+  color: white;
+}
+.btn-pdf { background-color: var(--danger); }
+.btn-pdf-month { background-color: #D32F2F; }
+.btn-excel { background-color: var(--success); }
+.btn-report { background-color: var(--info); }
+.btn-toggle { background-color: var(--primary-dark); }
+.btn-outline { background-color: transparent; color: var(--primary-dark); border-color: var(--primary-dark); }
+.btn-xs:active { opacity: 0.8; }
+
+/* جداول الرصد المنظمة والمسطرة بكثافة */
+.table-scroll {
+  overflow-x: auto;
+  border: 2px solid var(--primary-dark);
+  border-radius: 8px;
+  background-color: white;
+  margin-bottom: 12px;
+}
+
+.app-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  white-space: nowrap;
+}
+.app-table th {
+  background-color: var(--primary-dark);
+  color: white;
+  padding: 8px 4px;
+  font-weight: 800;
+  font-size: 13px;
+  border: 2px solid var(--primary-dark);
+  text-align: center;
+}
+.app-table td {
+  padding: 6px 4px;
+  border: 2px solid var(--primary-dark);
+  text-align: center;
+  color: black;
+}
+.sheet-table-bordered th, .sheet-table-bordered td {
+  border: 2px solid var(--primary-dark) !important; /* تسطير شديد لمنع تداخل الأسطر */
+}
+.app-table tbody tr:nth-child(even) { background-color: #F8F5FC; }
+
+/* التكثيف الحجمي للجداول لملاءمة شاشات الموبايل */
+.table-compact th { padding: 6px; font-size: 13px; }
+.table-compact td { padding: 4px; font-size: 14px; }
+
+/* حقول رصد الدرجات لزيادة سلاسة الإدخال التربوي */
+.cell-input {
+  width: 55px;
+  padding: 6px 2px;
+  border: 2px solid var(--primary-light);
+  border-radius: 5px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 800;
+  color: black;
+}
+.cell-input:focus {
+  background-color: #E2CDFC;
+  outline: none;
+  border-color: black;
+}
+
+/* ميزة تثبيت العمود والأسماء أثناء السحب الأفقي للجدول */
+.container-sticky-table {
+  max-height: 65vh;
+  overflow-y: auto;
+}
+.container-sticky-table th {
+  position: sticky; top: 0; z-index: 10;
+}
+.container-sticky-table th.sticky-side { z-index: 11; }
+
+.col-m { right: 0; width: 40px; min-width: 40px; }
+.col-name { right: 40px; width: 160px; min-width: 160px; text-align: right !important; }
+
+.app-table .sticky-side {
+  position: sticky;
+  background-color: white !important;
+}
+.app-table tr:nth-child(even) .sticky-side { background-color: #F8F5FC !important; }
+
+/* أزرار الحضور والغياب اللمسية الفورية والسريعة */
+.btn-att-toggle {
+  padding: 6px 10px;
+  font-size: 13px;
+  font-weight: 800;
+  border-radius: 5px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  background-color: #f5f5f5;
+  color: #333;
+  min-width: 60px;
+  display: inline-block;
+}
+.btn-att-toggle.active-present { background-color: var(--success) !important; color: white !important; border-color: var(--success); }
+.btn-att-toggle.active-absent { background-color: var(--danger) !important; color: white !important; border-color: var(--danger); }
+.btn-att-toggle.active-excused { background-color: var(--warning) !important; color: white !important; border-color: var(--warning); }
+
+/* حقل رصد الأسماء الفردية المتتابع */
+.student-add-inline {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.student-add-inline input {
+  flex: 1;
+  padding: 8px;
+  border: 2px solid var(--primary-dark);
+  border-radius: 6px;
+  font-size: 15px;
+}
+
+.classes-buttons-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.class-row-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  border: 2px solid var(--primary-dark);
+  background-color: #FAF8FD;
+  border-radius: 6px;
+  font-size: 15px;
+}
+.btn-delete { background-color: var(--danger); color: white; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px;}
+
+.id-report-summary { background-color: #E8F5E9; border-color: var(--success); padding: 12px; margin-bottom: 10px; }
+.id-report-summary h4 { color: var(--success); margin-bottom: 6px; font-size: 16px; }
+.id-report-summary p { font-size: 14px; margin-bottom: 4px; }
+
+/* نافذة بطاقة درجات الطالب المنفردة (Modal Overlay) */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 12px;
+}
+
+.student-modal-card {
+  background-color: white;
+  border: 3px solid var(--primary-dark);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  animation: slideUp 0.2s ease-out;
+}
+
+.modal-header {
+  background-color: var(--primary-dark);
+  color: white;
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+.modal-header h4 { font-size: 16px; font-weight: 900; }
+.close-modal-btn { background: none; border: none; color: white; cursor: pointer; font-size: 16px; }
+
+.printable-card-box {
+  padding: 16px;
+  color: black;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.modal-footer-actions {
+  padding: 12px;
+  border-top: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+}
+
+/* تصدير التقرير والطباعة */
+@media print {
+  #main-header, .compact-toolbar, .no-print, .btn-delete, .student-add-inline, .close-modal-btn, .modal-footer-actions {
+    display: none !important;
+  }
+  @page { size: landscape; } /* فرض اتجاه الطباعة الأفقي للتقارير */
+  body { background-color: white; color: black; font-size: 12px; }
+  .app-container { padding: 0; width: 100%; }
+  .card { border: none; box-shadow: none; padding: 0; margin: 0; }
+  .table-scroll { overflow: visible; border: none; }
+  .app-table { width: 100%; table-layout: fixed; white-space: normal; }
+  
+  .sheet-table-bordered th, .sheet-table-bordered td {
+    border: 1px solid #000 !important; 
+    color: black !important;
+    padding: 10px 4px !important; 
+    vertical-align: middle !important;
+  }
+  .app-table th { background-color: #EAEAEA !important; color: black !important; }
+}
+/* تنسيق الجدول الشهري التراكمي */
+#monthly-table { font-size: 14px; }
+#monthly-table th { padding: 6px !important; }
+#monthly-table td { text-align: center; font-weight: bold; }
+
+/* الكلاسات البرمجية المساعدة وإخفاء العناصر */
+.hidden { display: none !important; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* تنسيق الشريط المتحرك والذكي */
+.floating-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background-color: var(--surface);
+  padding: 10px;
+  transition: transform 0.3s ease-in-out;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  border-bottom: 2px solid var(--primary-dark);
+}
+
+.hidden-toolbar {
+  transform: translateY(-100%);
+}
+/* =====================================================
+   تنسيق الزر العائم وحركة شريط الدرجات الانسيابية 
+   ===================================================== */
+
+.toolbar-toggle-fab {
+  position: fixed;
+  bottom: 16px;
+  left: 16px; /* تم وضعه جهة اليسار لكي لا يغطي تسلسل وأسماء الطلاب اليمنى */
+  z-index: 99999; /* ليكون دائماً فوق الجدول والشريط */
+  background-color: var(--primary-medium, #5A2E99);
+  color: #FFFFFF;
+  border: 2px solid #FFFFFF;
+  padding: 10px 16px;
+  border-radius: 30px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  display: none; /* مخفي افتراضياً ويظهر فقط بالشاشة النشطة */
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+/* إظهار الزر العائم تلقائياً فقط وفقط عندما تكون شاشة دفتر الدرجات نشطة ومفتوحة */
+#screen-grades-sheet.screen.active .toolbar-toggle-fab {
+  display: flex;
+}
+
+/* جعل حركة اختفاء وظهور شريط الأدوات ناعمة ومريحة جداً للمستخدم */
+#grades-toolbar {
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease !important;
+}
+
+/* تفعيل تأثير الضغط الخفيف لتفاعل ممتاز مع شاشات اللمس (الموبايل) */
+.toolbar-toggle-fab:active {
+  transform: scale(0.93);
+}
+/* =====================================================
+   1. تنسيق الزر العائم وحركة شريط الدرجات الانسيابية 
+   ===================================================== */
+.toolbar-toggle-fab {
+  position: fixed;
+  bottom: 16px;
+  left: 16px; /* جهة اليسار لكي لا يغطي الأسماء اليمنى */
+  z-index: 99999;
+  background-color: var(--primary-medium, #5A2E99);
+  color: #FFFFFF;
+  border: 2px solid #FFFFFF;
+  padding: 10px 16px;
+  border-radius: 30px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+/* إظهار الزر العائم فقط عندما تكون شاشة دفتر الدرجات نشطة */
+#screen-grades-sheet.screen.active .toolbar-toggle-fab {
+  display: flex;
+}
+
+#grades-toolbar {
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease !important;
+}
+
+.toolbar-toggle-fab:active {
+  transform: scale(0.93);
+}
+
+/* =====================================================
+   2. تحرير مساحة شاشة الدرجات بالكامل عند إخفاء الشريط 
+   ===================================================== */
+
+/* إلغاء حجز مساحة الشريط تماماً وإخفائه كلياً من تدفق الصفحة */
+#grades-toolbar.hidden-toolbar {
+  display: none !important; 
+}
+
+/* تصفير أي حواف أو حشو سفلي محجوز للشريط داخل الشاشة ليتمدد الجدول فوراً */
+#screen-grades-sheet:has(#grades-toolbar.hidden-toolbar) {
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* إجبار حاوية الجدول على استغلال كامل الارتفاع المتاح */
+#screen-grades-sheet:has(#grades-toolbar.hidden-toolbar) .table-scroll {
+  height: calc(100vh - 120px) !important; /* يمنح الجدول أقصى مساحة رؤية ممكنة */
+  padding-bottom: 60px !important; /* مساحة أمان صغيرة لكي لا يغطي الزر آخر طالب */
+}
